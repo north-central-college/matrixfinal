@@ -1,0 +1,16 @@
+<h2>Welcome, <?= $this->currentUser?></h2>
+
+<?php echo "<table id=\"faculty_pending_table\">";?>
+<?php echo "<tr>";
+	  echo "<th>Student Name</th>";
+	  echo "<th>Indicator</th>";
+	  echo "<th>Artifact</th>";
+	  echo "<th>Reflective Statement</th>";
+	  echo "<th>Course</th>";
+	  echo "<th>Date Submitted</th>";
+	  echo "</tr>";
+	?>
+<?= $this->partialLoop('partials/pendingArtifactRow.phtml', $this->user) ?>
+<?php echo "</table>" ?>
+<?php echo "<a href=\"more.htm\">more...</a>"?>
+

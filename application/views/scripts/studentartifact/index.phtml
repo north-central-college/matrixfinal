@@ -1,0 +1,18 @@
+
+<h2>Insert New Artifact</h2>
+
+<?= $this->form;?>
+
+
+
+<h2>Artifacts</h2>
+<?php echo "<table id=\"student_artifact_table\" class =\"student_artifact_table\" cellspacing=\"0\">";?>
+<?php echo "<tr>";
+          echo "<th>Artifact Title</th>";
+          echo "<th>Memo</th>";
+          echo "</tr>";
+        ?>
+<dl>
+<?= $this->partialLoop('partials/artifactRow.phtml', $this->artifactinfo);?>
+<?php echo "</table>" ?>
+</dl>

@@ -1,0 +1,30 @@
+<h2>Standard: <?=$this->indRowSet[0]['standard_number'] . 
+     " -- " . $this->indRowSet[0]['stddesc']?>
+</h2>
+<br />
+<?php 
+foreach($this->indRowSet as $indrow):
+    echo "<h3>Indicator: " . $indrow['indicator_number'];
+    echo " -- " . $indrow['description'] . "</h3>";  
+	echo "<table id=\"indicator_artifact_table\">";
+	echo "<tr>";
+	echo "<th>Artifact Title</th>";
+	echo "<th>Course</th>";
+	echo "<th>Rating</th>";
+	echo "<th>Cover Letter</th>";
+	echo "<th>Cover Letter Rating</th>";
+	echo "<th>Evaluated By</th>";
+	echo "</tr>";
+
+    // get all artifacts for this indicator
+    $indartArray = array();
+    $ctr = 0;
+    for ($i=0; $i<sizeof($this->indartRowSet); $i++){
+    	if ($this->indartRowSet[$i]['indicator_number'] == $indrow['indicator_number'])
+    	   $indartArray[$ctr] = $this->indartRowSet[$i];
+    	   $ctr++;
+    }
+	echo $this->partialLoop('partials/indicators.phtml', $indartArray);
+	echo "</table><br /><br />";
+endforeach;
+?>
