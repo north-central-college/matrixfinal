@@ -1,0 +1,12 @@
+<h2>Select Artifact to Link to Standard: <?= $this->standard_id?>
+          Indicator: <?= $this->indicator_id ?></h2>
+<?php echo "<table id=\"student_artifact_table\" class =\"student_artifact_table\" cellspacing=\"0\">";?>
+<?php echo "<tr>";
+          echo "<th>Artifact Title</th>";
+          echo "<th>Memo</th>";
+          echo "</tr>";
+          ?>
+<dl>
+<?= $this->partialLoop('partials/artifactRowLink.phtml', $this->artRowSet);?>
+<?php echo "</table>" ?>
+</dl>

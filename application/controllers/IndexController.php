@@ -10,8 +10,7 @@
 
 class IndexController extends Zend_Controller_Action
 {
-	protected $indexService;
-	
+   	
     public function init()
     {
     	
@@ -27,9 +26,8 @@ class IndexController extends Zend_Controller_Action
     	$this->view->error_flag = $this->getRequest()->getParam('error_flag');
 		  	
         // Retrieve the form and assign it to the view
-		$this->view->form = $this->getForm();
-		
-	 }
+	$this->view->form = $this->getForm();
+    }
     
     /**
      * KG and PA
@@ -37,11 +35,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function getForm()
     {
-    	return new Application_Model_LoginForm(array(
-			/* don't think next two lines are needed */
-    		// 'action' => 'login/process',  
-    		// 'method' => 'post',
-    	));
+    	return new Application_Model_LoginForm(array(	));
     }
     
     
@@ -114,7 +108,7 @@ class IndexController extends Zend_Controller_Action
         if (!$form->isValid($request->getPost())) 
         {
             // Redirect to the login page and set error flag	
-			$this->_redirect('/index/index/error_flag/TRUE');
+		$this->_redirect('/index/index/error_flag/TRUE');
         	exit();
         }
         
@@ -126,22 +120,22 @@ class IndexController extends Zend_Controller_Action
         $sessionNamespace = new Zend_Session_Namespace();
         $sessionNamespace->userName = $username;
 
-		$this->indexService = new App_IndexService();
-	    //assign to $userInfo value of getUserInfo function
+	$this->indexService = new App_IndexService();
+	//assign to $userInfo value of getUserInfo function
  
-  	 	$this->view->userInfo = $this->indexService->GetUserInfo($sessionNamespace->userName);
+  	$this->view->userInfo = $this->indexService->GetUserInfo($sessionNamespace->userName);
 
   	 	 		
- 		if (!$this->view->userInfo){
-  	 		$valid = false;
-  	 	}
-  	 	else{
-  			$sessionNamespace->userID = $this->view->userInfo->user_id;
-  	 		$sessionNamespace->userRole = $this->view->userInfo->role;
-  	 		$sessionNamespace->userLName = $this->view->userInfo->last_name;
-                        $sessionNamespace->userFName = $this->view->userInfo->first_name;
-  	 		$valid = true;
-  	 	}
+ 	if (!$this->view->userInfo){
+            $valid = false;
+  	}
+  	else{
+            $sessionNamespace->userID = $this->view->userInfo->user_id;
+            $sessionNamespace->userRole = $this->view->userInfo->role;
+            $sessionNamespace->userLName = $this->view->userInfo->last_name;
+            $sessionNamespace->userFName = $this->view->userInfo->first_name;
+            $valid = true;
+        }
 
   	 	//If the user exists, validate password with LDAP
         if($valid)
@@ -169,25 +163,16 @@ class IndexController extends Zend_Controller_Action
         
         
         if ($valid)
-        {	$this->view->error_flag = FALSE;
-
-        	  	 		
-        	if ($sessionNamespace->userRole == 'F')
-        	//user is a faculty
-        	{
-        		$this->_helper->redirector('index', 'faculty');
-        	}
-        	else
-        	//user is faculty
-        	{
-        		$this->_helper->redirector('index', 'student');
-        	}
+        {
+            $this->view->error_flag = FALSE;
+            $this->_helper->redirector('index', 'landing');
+        	
         	
         }
         else
         {
         	// Redirect to the login page and set error flag	
-			$this->_redirect('/index/index/error_flag/TRUE');
+		$this->_redirect('/index/index/error_flag/TRUE');
         	exit();
         }
    }

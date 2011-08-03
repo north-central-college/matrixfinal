@@ -5,6 +5,16 @@
 	<td><?= $this->filename ?> </td>
 	<td><?= $this->rr_rating ?> </td>
 	<td><?= $this->rating_user_first . " " . $this->rating_user_last ?> </td>
+	<?php 
+	echo "<td><button type='button' onClick=\"parent.location='submitartifact?standard=";
+	echo $this->standard_id;
+	echo "&indicator=";
+	echo $this->indicator_id; 
+	echo "&artifactid=";
+	echo $this->artifact_id;
+	echo "'\">";
+	echo "Submit for Approval</button></td>";
+	?>
+	<td><button type='button' onClick=\"parent.location='studentartifact' \">Remove Artifact</button></td>
 </tr>
-
 

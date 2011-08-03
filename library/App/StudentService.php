@@ -49,7 +49,7 @@ class App_StudentService {
    		return $this->artifact->fetchRow($select);
     }
     
-	public function GetAllArtifacts($id)
+    public function GetAllArtifacts($id)
     {
    		$select = $this->db->select()
    			->from(array('a' => 'artifact'), array('artifact_id', 'artifact_title', 'description', 'timestamp'))
@@ -238,8 +238,8 @@ class App_StudentService {
 	}
 	
 	
-   public function NewArtifact($artifact_title, $description, $media_extention, $userid)
-   {
+	public function NewArtifact($artifact_title, $description, $media_extention, $userid)
+	{
    		$params = array(
    					'artifact_title' => $artifact_title,
    					'description' => $description,
@@ -247,8 +247,10 @@ class App_StudentService {
    					'student_id' => $userid);
    		   					
    		$this->artifact->insert($params);
-   }
+	}
    
-
+	public function RemoveArtifactIndicatorLink(){
+	
+	}
 }   
   

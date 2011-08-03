@@ -26,7 +26,7 @@ class StudentController extends Zend_Controller_Action
 		    // building userInfo
 	    $sessionNamespace = new Zend_Session_Namespace();
 		    
-		    $this->view->userInfo = array('userID' => $sessionNamespace->userID,
+	    $this->view->userInfo = array('userID' => $sessionNamespace->userID,
 									      'role' => $sessionNamespace->userRole,
 									      'last_name' => $sessionNamespace->userLName, 
 								      'first_name' => $sessionNamespace->userFName,
