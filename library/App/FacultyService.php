@@ -216,6 +216,14 @@ class App_FacultyService {
    		
    		return $roleArray['role'];		
 	}
+	
+	public function GetAllFaculty(){
+		$select = $this->db->select()
+						->from('user')
+						->where('role = ?', 'F');
+		$result = $this->db->fetchAll($select);
+		return $result;
+	}
 }
 
 
