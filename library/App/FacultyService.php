@@ -219,8 +219,10 @@ class App_FacultyService {
 	
 	public function GetAllFaculty(){
 		$select = $this->db->select()
-						->from('user')
-						->where('role = ?', 'F');
+			       ->from('user', array(
+					'name' => new Zend_Db_Expr("CONCAT(first_name, ' ', last_name)")
+				))
+				->where('role = ?', 'F');
 		$result = $this->db->fetchAll($select);
 		return $result;
 	}

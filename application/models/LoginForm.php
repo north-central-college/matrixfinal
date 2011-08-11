@@ -18,14 +18,14 @@ class Application_Model_LoginForm extends Zend_Form
 		// Username must consist of letters only
 		//          must be between 5 and 20 characters
 		$username = $this->addElement('text', 'username', array(
-            'filters'    => array('StringTrim', 'StringToLower'),
-            'validators' => array(
-                'Alpha',
-                array('StringLength', false, array(5, 20)),
-            ),
-            'required'   => true,
-            'label'      => 'Username:',
-        ));
+                                   'filters'    => array('StringTrim', 'StringToLower'),
+                                   'validators' => array(
+				          'Alpha',
+                                          array('StringLength', false, array(5, 20)),
+		                        ),
+				   'required'   => true,
+				   'label'      => 'Username:',
+				 ));
 		
         // Password must consist of alphanumeric characters only
         //          must be between 6 and 20 characters
