@@ -2,10 +2,26 @@
 <head>
 	<title>Education Matrix</title>
 	<link rel="stylesheet" type="text/css" href="/mpfinal/public/css/main.css">
+	<script type="text/javascript">
+	function show_confirm(good, bad, msg)
+	{
+	   var r=confirm("Are you sure?\n" + msg);
+	   if (r==true)
+	   {    
+		window.location = "http://localhost/mpfinal/public/" + good;
+		//alert("You pressed OK!");
+           }
+	   else
+	   {
+		window.location = "http://localhost/mpfinal/public/" + bad;
+		//alert("You pressed Cancel!");
+           }
+	}
+	</script>
 </head>
 <body>
 	<div id="header">
-		<h1>Education Matrix : <?php echo $this->layout()->pagetitle ?> </h1>
+		<h1>Education Matrix : <?php echo $this->pagetitle ?> </h1>
 	</div>
         <div id="side-navbar"><?= $this->partial('partials/studentNavMenu.phtml')?></div>
         <div id="content">

@@ -211,14 +211,17 @@ class App_StudentService {
 		
 		$select = $this->db->select()
    			->from(array('i' => 'indicator'), array('i.indicator_id', 'i.description', 'i.indicator_number'))
-			->join(array('ais'=>'artifact_indicator_status'), 'i.indicator_id = ais.indicator_id')
-			->join(array('a' => 'artifact'), 'ais.artifact_id = a.artifact_id')
-   			->joinLeft(array('ar'=>'artifact_rating'), 'ar.artifact_id = a.artifact_id && ar.indicator_id = ais.indicator_id')
-   			->joinLeft(array('r'=>'reflective_statement'), 'r.artifact_id = a.artifact_id && r.indicator_id = ais.indicator_id')
-   			->joinLeft(array('rr'=>'reflective_statement_rating'), 'rr.reflective_statement_id = r.reflective_statement_id', array('rr_rating'=>'rr.rating_code'))
-   			->joinLeft(array('u'=>'user'), 'rr.rating_user_id = u.user_id', array('rating_user_first'=>'u.first_name', 'rating_user_last'=>'u.last_name'))
+			->join(array('ais'=>'artifact_indicator_status'), 'i.indicator_id = ais.indicator_id', array('ais.artifact_indicator_status_id'))
+			->join(array('a' => 'artifact'), 'ais.artifact_id = a.artifact_id', array('a.artifact_id', 'artifact_description'=>'a.description', 'a.course_id', 'a.artifact_title'))
+   			->joinLeft(array('ar'=>'artifact_rating'), 'ar.artifact_id = a.artifact_id && ar.indicator_id = ais.indicator_id',
+							array('ar.artifact_rating_id', 'ar.rating_user_id', 'art_rating'=>'ar.rating_code', 'art_comment'=>'ar.comments'))
+   			->joinLeft(array('r'=>'reflective_statement'), 'r.artifact_id = a.artifact_id && r.indicator_id = ais.indicator_id',
+							array('r.reflective_statement_id', 'r.filename', 'r.comments'))
+   			->joinLeft(array('rr'=>'reflective_statement_rating'), 'rr.reflective_statement_id = r.reflective_statement_id',
+							array('ref_rating'=>'rr.rating_code', 'ref_comment'=>'rr.comment'))
+   			->joinLeft(array('u'=>'user'), 'ar.rating_user_id = u.user_id', array('rating_user_first'=>'u.first_name', 'rating_user_last'=>'u.last_name'))
    			->where('i.standard_id = ?', $standard_id)
-		    ->where('a.student_id = ?', $student_id)
+		        ->where('a.student_id = ?', $student_id)
 		;
 		
  			
@@ -249,8 +252,11 @@ class App_StudentService {
    		$this->artifact->insert($params);
 	}
    
-	public function RemoveArtifactIndicatorLink(){
-	
+	public function RemoveArtifactIndicatorLink($artifact_id, $indicator_id){
+		$where = array();
+		$where[] = $this->db->quoteInto('artifact_id = ?', $artifact_id);
+		$where[] = $this->db->quoteInto('indicator_id = ?', $indicator_id);
+		$this->artifact_indicator_status->delete($where);
 	}
 }   
   

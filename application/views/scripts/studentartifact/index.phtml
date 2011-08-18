@@ -1,7 +1,7 @@
 
 <h2>Insert New Artifact</h2>
 
-<?= $this->form;?>
+<?php $this->form;?>
 
 
 
@@ -11,8 +11,9 @@
           echo "<th>Artifact Title</th>";
           echo "<th>Memo</th>";
           echo "</tr>";
-        ?>
+?>
 <dl>
-<?= $this->partialLoop('partials/artifactRow.phtml', $this->artifactinfo);?>
+          
+<?php echo $this->partialLoop('partials/artifactRow.phtml', $this->artifactinfo);?>
 <?php echo "</table>" ?>
 </dl>

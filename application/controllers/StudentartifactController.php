@@ -6,7 +6,8 @@ class StudentartifactController extends Zend_Controller_Action
 	
     public function init()
     {
-        /* Initialize action controller here */
+       	$this->view->pagetitle = "Upload Artifacts";
+
     }
     
     //	establishes studentService and preloads the User Information
@@ -15,13 +16,13 @@ class StudentartifactController extends Zend_Controller_Action
     	$this->studentService = new App_StudentService(); 	
 		
     	$sessionNamespace = new Zend_Session_Namespace();
-   		$this->view->userInfo = array('userID' => $sessionNamespace->userID,
-   									  'role' => $sessionNamespace->userRole,
-  	 								  'last_name' => $sessionNamespace->userLName, 
-        							  'first_name' => $sessionNamespace->userFName,
-                                );
+   	$this->view->userInfo = array('userID' => $sessionNamespace->userID,
+   				  'role' => $sessionNamespace->userRole,
+  				  'last_name' => $sessionNamespace->userLName, 
+				  'first_name' => $sessionNamespace->userFName,
+        );
         // Create the Artifacts table
-		$rowset = $this->studentService->GetAllArtifacts($sessionNamespace->userID);        
+	$rowset = $this->studentService->GetAllArtifacts($sessionNamespace->userID);        
         $this->view->artifactinfo = $rowset;
     }
     
@@ -35,18 +36,17 @@ class StudentartifactController extends Zend_Controller_Action
      public function indexAction()
       {
       				  	
-        	// Retrieve the form and assign it to the view
-			$this->view->form = $this->getForm();
+        // Retrieve the form and assign it to the view
+	$this->view->form = $this->getForm();
 			
 			
       }
 
       public function processAction()
        {
-      		// check if login data entered
-    		$request = $this->getRequest();
-    	
-     	    // If we don't have a POST request, go back to login 
+		// check if login data entered
+		$request = $this->getRequest();
+    	 	    // If we don't have a POST request, go back to login 
        	 	if (!$request->isPost()) {
             	   return $this->_helper->redirector('studentartifact');
         	}

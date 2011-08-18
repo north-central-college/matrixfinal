@@ -29,11 +29,13 @@ class LandingController extends Zend_Controller_Action
 			$this->facultyService = new App_FacultyService();                           
 			$rowset = $facultyService->GetArtifactsForFacultyIDWithOrderAndStatus(
 				$this->view->userInfo['userID'],  'submitted_timestamp', 2);              
-			$this->view->user = $rowset->toArray();   
+			$this->view->user = $rowset->toArray();
+			$this->view->pagetitle = "Faculty Landing";
 	
 		}
         	else 	//user is student
         	{
+			$this->view->pagetitle = "Student Landing";
 			$this->studentService = new App_StudentService();
 		        //assign to roledesc value of GetRoleName function
 			$userprogram = $this->studentService->GetRoleInfo($sessionNamespace->userRole);
@@ -42,7 +44,7 @@ class LandingController extends Zend_Controller_Action
 			
 			//assign to uploadrows value from getUploads function
 			//uploadrows holds 5 latest upload artifacts unlinked
-				$uploadrows = $this->studentService->GetUploads($sessionNamespace->userID);
+			$uploadrows = $this->studentService->GetUploads($sessionNamespace->userID);
 				//create variable uploads for index.phtml to use under recent uploads
 			$this->view->uploads = $uploadrows;
 			

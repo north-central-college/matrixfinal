@@ -1,6 +1,6 @@
 <div id="welcome">
-<h3>Hello <?= $this->first_name; ?> <?= $this->last_name; ?>,</h3>
-<p>Standards for program <strong><?= $this->role->description; ?></strong></p>
+<h3>Hello <?= $this->userInfo['first_name']; ?> <?= $this->userInfo['last_name']; ?></h3>
+<p>Standards for program <strong><?= $this->roleInfo['description']; ?></strong></p>
 </div>
 
 <?php echo "<table id=\"standards_by_program_table\" cellpadding='5'>";?>
@@ -9,6 +9,7 @@
 	  echo "<th>Description</th>";
 	  echo "<th>Details</th>";
 	  echo "</tr>";
-	?>
-<?= $this->partialLoop('partials/standards.phtml', $this->stand);?>
+?>
+
+<?php echo $this->partialLoop('partials/standards.phtml', $this->standardsInfo);?>
 <?php echo "</table>" ?>

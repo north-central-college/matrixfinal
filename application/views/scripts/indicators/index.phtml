@@ -1,4 +1,4 @@
-<h2>Standard: <?=$this->indRowSet[0]['standard_number'] . 
+<h2>Standard: <?= $this->indRowSet[0]['standard_number'] . 
      " -- " . $this->indRowSet[0]['stddesc']?>
 </h2>
 <br />
@@ -20,7 +20,7 @@ foreach($this->indRowSet as $indrow):
     echo "<th>Rating</th>";
     echo "<th>Cover Letter</th>";
     echo "<th>Cover Letter Rating</th>";
-    echo "<th>Evaluated By</th>";
+    echo "<th>Evaluator</th>";
     echo "</tr>";
 
     // get all artifacts for this indicator
@@ -29,9 +29,12 @@ foreach($this->indRowSet as $indrow):
     for ($i=0; $i<sizeof($this->indartRowSet); $i++){
     	if ($this->indartRowSet[$i]['indicator_number'] == $indrow['indicator_number']){
     	   $indartArray[$ctr] = $this->indartRowSet[$i];
+	   $standard = array("standard_id" => $this->standard_id);
+	   $indartArray[$ctr] = array_merge((array)$indartArray[$ctr], (array)$standard);
     	   $ctr++;
 	}
     }
+    
     echo $this->partialLoop('partials/indicators.phtml', $indartArray);
     echo "</table><br /><br />";
 endforeach;

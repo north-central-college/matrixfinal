@@ -1,20 +1,46 @@
+<?php
+
+?>
+
 <tr>
 	<td><?= $this->artifact_title ?></td> 
 	<td><?= $this->course_id ?> </td>
-	<td><?= $this->rating_code ?> </td>
+	<td><?= $this->art_rating ?> </td>
 	<td><?= $this->filename ?> </td>
-	<td><?= $this->rr_rating ?> </td>
+	<td><?= $this->ref_rating ?> </td>
 	<td><?= $this->rating_user_first . " " . $this->rating_user_last ?> </td>
-	<?php 
-	echo "<td><button type='button' onClick=\"parent.location='submitartifact?standard=";
-	echo $this->standard_id;
-	echo "&indicator=";
-	echo $this->indicator_id; 
-	echo "&artifactid=";
-	echo $this->artifact_id;
-	echo "'\">";
-	echo "Submit for Approval</button></td>";
+	<?php
+	  function disableButton(){
+	     return "disabled='disabled'";
+	  }
+	  $params = 'standard=' . $this->standard_id . '&indicator=' . $this->indicator_id .
+		    '&artifactid=' . $this->artifact_id;
+	   echo "<td><button type='button'";
+	   
+	   // disable link button if there already is a faculty assigned
+	   if ($this->rating_user_first){
+		echo disableButton();
+	   }
+	   
+	   echo "name='link1' id='link1' onClick=\"parent.location='submitartifact?";
+	   echo $params;
+	   echo "'\">";
+	   echo "Submit for Approval</button></td>";
+	
+	   // removing triggers show_confirm function
+	   $path1 = 'javascript:show_confirm(\'indicators/remove?';
+	   $path2 = $path1 . $params;
+	   
+	   echo "<td><button type='button'";
+	   
+	   // disable remove button if there already is a faculty assigned
+	   if ($this->rating_user_first){
+		echo disableButton();
+	   }
+	   
+	   echo "onClick=";
+	   echo $path2;
+	   echo "','Removing')>Remove Artifact Link</button></td>";
 	?>
-	<td><button type='button' onClick=\"parent.location='removeartifact' \">Remove Artifact</button></td>
 </tr>
 
