@@ -1,5 +1,21 @@
 
+<script type="text/javascript">
+    function getData(param)
+    {
+        radiovalues = document.getElementsByName("faculty");
+        for(i=0; i<radiovalues.length; i++){
+            if (radiovalues[i].checked){
+                rv = radiovalues[i].value;
+            }
+        
+        }
+        param = param + "&faculty=" + rv;
+        // make sure - if yes, go to process method of indicators controller
+        // sending along needed data to update table, if not stay on same page
+        javascript:show_confirm("indicators/process?" + param,
+                                "submitartifact?" + param,
+                                "Linking Faculty to Artifact");
+    }
+</script>
 <h2>Select a Faculty Member</h2>
 <?= $this->form;?>
-
-

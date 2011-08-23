@@ -23,6 +23,7 @@ class App_IndexService {
 	public function GetUserInfo($student_name)
 	{
 		$select = $this->user->select()->where('username = ?', $student_name);
+		var_dump($student_name);
 		return $this->user->fetchRow($select);
 	}
 	

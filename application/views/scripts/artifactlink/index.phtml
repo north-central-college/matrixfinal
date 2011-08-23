@@ -7,6 +7,6 @@
           echo "</tr>";
           ?>
 <dl>
-<?= $this->partialLoop('partials/artifactRowLink.phtml', $this->artRowSet);?>
+<?php $this->partialLoop('partials/artifactRowLink.phtml', $this->artRowSet);?>
 <?php echo "</table>" ?>
 </dl>

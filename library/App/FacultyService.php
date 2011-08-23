@@ -226,6 +226,27 @@ class App_FacultyService {
 		$result = $this->db->fetchAll($select);
 		return $result;
 	}
+	public function NewArtifactRating($artifact_id, $indicator_id, $rating_user_id)
+	{
+   		$params = array(
+   				'artifact_id' => $artifact_id,
+				'indicator_id' => $indicator_id,
+   				'rating_user_id' => $rating_user_id,
+   			);
+   		   					
+   		$this->artifact_rating->insert($params);
+	}
+	public function GetFacultyByName($name){
+		$fname = strtok($name, " ");
+		$lname = strtok(" ");
+		$select = $this->db->select()
+			       ->from('user')
+			       ->where('last_name = ?', $lname)
+			       ->where('first_name = ?', $fname);
+		$result = $this->db->fetchAll($select);
+		return $result;
+	}
+   
 }
 
 

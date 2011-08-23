@@ -13,7 +13,7 @@ class IndexController extends Zend_Controller_Action
    	
     public function init()
     {
-    	
+    	$this->view->pagetitle = "Login Page";
     }
 
     /**
@@ -125,7 +125,6 @@ class IndexController extends Zend_Controller_Action
  
   	$this->view->userInfo = $this->indexService->GetUserInfo($sessionNamespace->userName);
 
-  	 	 		
  	if (!$this->view->userInfo){
             $valid = false;
   	}
@@ -140,7 +139,7 @@ class IndexController extends Zend_Controller_Action
   	 	//If the user exists, validate password with LDAP
         if($valid)
         {
-	        $auth = Zend_Auth::getInstance();
+/*		$auth = Zend_Auth::getInstance();
 	        $authAdapter = new Zend_Auth_Adapter_Ldap(
 	                                   array(
 	                                           'server' => array(
@@ -159,7 +158,7 @@ class IndexController extends Zend_Controller_Action
 	       	{
 	       		$valid = FALSE;
 	       	}
-        }
+*/      }
         
         
         if ($valid)
