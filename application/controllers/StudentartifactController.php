@@ -21,18 +21,13 @@ class StudentartifactController extends Zend_Controller_Action
   				  'last_name' => $sessionNamespace->userLName, 
 				  'first_name' => $sessionNamespace->userFName,
         );
+	$this->view->student_id = $sessionNamespace->userID;
         // Create the Artifacts table
 	$rowset = $this->studentService->GetAllArtifacts($sessionNamespace->userID);        
         $this->view->artifactinfo = $rowset;
     }
     
-   
-    /**
-    * JD
-    * Handles the setup to display the student artifact page.  
-    * Should rely on session variables for the user id. Hard-coded to user 1 for now.
-    */  
-    
+      
      public function indexAction()
       {
       		// Get all courses to display on form		  	
@@ -40,21 +35,24 @@ class StudentartifactController extends Zend_Controller_Action
 		
 		// Retrieve the form and assign it to the view
 		$this->view->form = $this->getForm();
-    		
+    		$form = $this->getForm();
       }
+      
       public function processAction(){
-	 	// Get all courses to display on form		  	
+	 		// Get all courses to display on form		  	
 	        $this->view->courses = $this->getCourses();
-		// Get our form and validate it
-        	$request = $this->getRequest();
-    		$form = $this->getForm();      
-    		// Get student service for queries
+		
+		// Retrieve the form and assign it to the view
+		$this->view->form = $this->getForm();
+    		$form = $this->getForm();
+		// Get student service for queries
 		$this->studentService = new App_StudentService();
-			
+
+		$request = $this->getRequest();
 		if($request->isPost())
       		{
 		     $formData = $request->getPost();
-		     var_dump($formData);
+		     
 	             if ($form->isValid($formData)) {
 			    
 			// getting text data
@@ -71,11 +69,19 @@ class StudentartifactController extends Zend_Controller_Action
 			$fullFilePath = $form->file->getFileName();
 			$path_title = strtok($fullFilePath, ".");
 			$media_extension = strtok("\n\t");
-		
+			
+			// extract filename from full path removing all spaces
+			$filename = strrev($path_title);
+			$filename = strtok($filename, "\\");
+			$filename = str_replace(" ", "", $filename);
+			$filename = strrev($filename);
+			
 			// uploading file
 			$file = $form->getElement('file');
 			try {
-			    // upload received file(s)
+			    // upload received file renaming to above
+			    $fullname = $filename . "." . $media_extension;
+			    $file->addFilter('Rename', $fullname);
 		            $file->receive();
 			} catch (Zend_File_Transfer_Exception $e) {
 			    $e->getMessage();
@@ -83,21 +89,46 @@ class StudentartifactController extends Zend_Controller_Action
 			// getting user id
 			$userid = $this->view->userInfo['userID'];
 			
-			Zend_Debug::dump($artifact_title, '$artifact_title');
+			//Zend_Debug::dump($filename, '$filename');
+	         	Zend_Debug::dump($artifact_title, '$artifact_title');
 	                Zend_Debug::dump($description, '$description');
 			Zend_Debug::dump($course_num, '$course_num');
 			Zend_Debug::dump($course_id, '$course_id');
 			Zend_Debug::dump($userid, '$userid');
-	               
+	                
 			$this->studentService->NewArtifact($artifact_title, $course_id,
-				    $description, $media_extension, $userid);
+				    $description, $filename, $media_extension, $userid);
 	
 		    } else {
 	                $form->populate($formData);
 	            }
-		}
+		}	
+		
 		$this->_helper->redirector('index');
 	
+      }
+      public function openfileAction(){
+		//This will open a file chosen by the user.
+		                  
+	 	$this->view->artifact_id = $this->_getParam('artifact');
+		// Get student service for queries
+		$this->studentService = new App_StudentService();
+		$result = $this->studentService->GetArtifact($this->view->artifact_id);
+		$file = "uploads/s" . $result->student_id . "/" .
+			$result->filename . "." . $result->media_extension;
+		
+		header('Content-Description: File Transfer');
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename='.basename($file));
+		header('Content-Transfer-Encoding: binary');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+		header('Pragma: public');
+		header('Content-Length: ' . filesize($file));
+		ob_clean();
+		flush();
+		readfile($file);
+		exit;
       }
       public function getCourses()
       {
@@ -118,7 +149,8 @@ class StudentartifactController extends Zend_Controller_Action
       
       public function getForm()
     	{
-		return new Application_Model_ArtifactinputForm($this->view->courses);
+		return new Application_Model_ArtifactinputForm($this->view->courses,
+							       $this->view->student_id);
     	}
      /**
      * JD

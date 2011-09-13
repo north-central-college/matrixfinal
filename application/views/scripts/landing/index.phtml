@@ -32,49 +32,49 @@ Welcome, <strong><?= $this->userInfo['first_name'] ?> <?= $this->userInfo['last_
 	      <table id=\'uploaded_artifacts_table\'>
 	      <tr>
 	         <th>Artifact Title</th>
-	      </tr>";
+	      </tr><dl>";
 	  echo $this->partialLoop('partials/uploadRow.phtml', $this->uploads);
-	  echo "</table><br></div>";
+	  echo "</table></dl><br></div>";
 
 	  echo "<div id='linked'>
 	      <strong>Recent Linked Artifacts</strong>
 	      <table id=\'linked_table\'>
 	      <tr>
-	      <th>Artifact Title</th>
-	      <th>Course</th>
-	      <th>Standard</th>
-	      <th>Indicator</th>
-	      </tr>";
+		  <th>Artifact Title</th>
+		  <th>Course</th>
+		  <th>Standard</th>
+		  <th>Indicator</th>
+	      </tr><dl>";
 	  echo $this->partialLoop('partials/linkedArtifactRow.phtml', $this->links);
-	  echo "</table><br></div>";
+	  echo "</table></dl><br></div>";
 
   	  echo "<div id='submissions'>
 	      <strong>Recent Submissions</strong>
 	      <br>
 	      <table id=\'submitted_table\'>
 	      <tr>
-	      <th>Artifact Title</th>
-	      <th>Course</th>
-	      <th>Standard</th>
-	      <th>Indicator</th>
-	      <th>Professor</th>
-	      </tr>";
+		  <th>Artifact Title</th>
+		  <th>Course</th>
+		  <th>Standard</th>
+		  <th>Indicator</th>
+		  <th>Professor</th>
+	      </tr><dl>";
 	  echo $this->partialLoop('partials/submissionRow.phtml', $this->submit); 
-	  echo "</table><br></div>";
+	  echo "</table></dl><br></div>";
 	  echo "<div id='feedback'>
 	      <strong>Recent Feedback</strong>
 	      <br>
 	      <table id=\'eval_table\'>
 	      <tr>
-	      <th>Artifact Title</th>
-	      <th>Course</th>
-	      <th>Standard</th>
-	      <th>Indicator</th>
-	      <th>Professor</th>
-	      <th>Rating</th>
-	      </tr>";
+	         <th>Artifact Title</th>
+	         <th>Course</th>
+	         <th>Standard</th>
+	         <th>Indicator</th>
+	         <th>Professor</th>
+	         <th>Rating</th>
+	      </tr><dl>";
 	  echo $this->partialLoop('partials/evaluatedRow.phtml', $this->evaluated);
-	  echo "</table><br></div>";
+	  echo "</table></dl><br></div>";
       }
 ?>	  
 

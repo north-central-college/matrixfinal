@@ -38,8 +38,8 @@ class App_StudentService {
    		
 	}
   
-   //Database function to retrieve the role of the user with the given id number
-	public function GetRoleInfo($role_id)
+    // C StClair
+    public function GetRoleInfo($role_id)
 	{
 		$select = $this->role->select()->where('role_code = ?', $role_id);
 		return $this->role->fetchRow($select);
@@ -51,12 +51,26 @@ class App_StudentService {
    		return $this->artifact->fetchRow($select);
     }
     
-    public function GetAllArtifacts($id)
+    public function GetAllArtifacts($id){
+		$select = $this->db->select()
+   			->from(array('a' => 'artifact'), array('artifact_id', 'artifact_title', 'description', 'timestamp'))
+			->join(array('u'=>'user'), 'a.student_id = u.user_id')
+   			->where('u.user_id = ?', $id);
+			
+   		return $this->db->fetchAll($select);
+    }
+    // C StClair
+    public function GetAllArtifactsNotLinkedtoIndicator($id, $standard, $indicator)
     {
    		$select = $this->db->select()
    			->from(array('a' => 'artifact'), array('artifact_id', 'artifact_title', 'description', 'timestamp'))
-   			->join(array('u'=>'user'), 'a.student_id = u.user_id')
+			->join(array('u'=>'user'), 'a.student_id = u.user_id')
+   			->where('a.artifact_id NOT IN (?)',
+				$this->db->fetchCol($this->db->select()
+				    ->from(array('ais' => 'artifact_indicator_status'), array('artifact_id', 'indicator_id'))
+				    ->where('ais.indicator_id = ?', $indicator)))
    			->where('u.user_id = ?', $id);
+			
    		return $this->db->fetchAll($select);
     }
 
@@ -86,8 +100,9 @@ class App_StudentService {
    //Database function to retrieve the uploaded artifacts for the user with the given id number
    //will return only those records that are in the artifact table but NOT in the
    //artifact_indicator_table, meaning those that are not yet linked
-   //will return only the five most recent uploads 
-	public function GetUploads($student_id)
+   //will return only the five most recent uploads
+   // Modified C StClair
+    public function GetUploads($student_id)
 	{
    		$selectAIS = $this->artifact_indicator_status->select()
    			->from(array('ais' => 'artifact_indicator_status'),array('ais.artifact_id'));
@@ -98,10 +113,11 @@ class App_StudentService {
    		return $this->artifact->fetchAll($select);
 	}
    
-	//Database function to retrieve the linked artifacts for the user with the given id number
-    //will return only those records that are in the artifact_indicator_status table 
-    //and have a status of 'L' (linked)
-    //will return only the five most recent links 
+     //Database function to retrieve the linked artifacts for the user with the given id number
+     //will return only those records that are in the artifact_indicator_status table 
+     //and have a status of '1' (linked) but not submitted
+     //will return only the five most recent links
+     // Modified C StClair
 	public function GetLinkedArtifacts($student_id)
 	{
    		$select = $this->db->select()
@@ -110,7 +126,7 @@ class App_StudentService {
    			->join(array('c'=>'course'), 'a.course_id = c.course_id')
    			->join(array('i'=> 'indicator'), 'i.indicator_id = ais.indicator_id')
    			->join(array('s'=> 'standard'), 'i.standard_id = s.standard_id')
-   			->where('ais.status_code = ?', 'L')
+   			->where('ais.status_code = ?', '1')
    			->where('a.student_id = ?', $student_id)
    			->order('artifact_indicator_status_id DESC')
    			->limit(5);
@@ -120,9 +136,10 @@ class App_StudentService {
 	}
    
 	//Database function to retrieve the submitted artifacts for the user with the given id number
-    //will return only those records that are in the artifact_indicator_status table 
-    //and have a status of 'S' (submitted)
-    //will return only the five most recent submissions 
+        //will return only those records that are in the artifact_indicator_status table 
+        //and have a status of 'S' (submitted)
+        //will return only the five most recent submissions
+	// modified C StClair
 	public function GetSubmittedArtifacts($student_id)
 	{
    		$select = $this->db->select()
@@ -133,7 +150,7 @@ class App_StudentService {
    			->join(array('s'=> 'standard'), 'i.standard_id = s.standard_id')
    			->join(array('ar'=>'artifact_rating'), 'ar.artifact_id = ais.artifact_id')
    			->join(array('u'=>'user'), 'ar.rating_user_id = u.user_id')
-   			->where('ais.status_code = ?', 'S')
+   			->where('ais.status_code = ?', '2')
    			->where('a.student_id = ?', $student_id)
    			->order('artifact_indicator_status_id DESC')
    			->limit(5);
@@ -143,9 +160,9 @@ class App_StudentService {
 	}
 	
 	//Database function to retrieve the evaluated artifacts for the user with the given id number
-    //will return only those records that are in the artifact_indicator_status table 
-    //and have a status of 'E' (evaluated)
-    //will return only the five most recent evaluations 
+       //will return only those records that are in the artifact_indicator_status table 
+       //and have a status of '3' (evaluated)
+       //will return only the five most recent evaluations 
 	public function GetEvaluatedArtifacts($student_id)
 	{
 		$select = $this->db->select()
@@ -157,7 +174,7 @@ class App_StudentService {
    			->join(array('ar'=>'artifact_rating'), 'ar.artifact_id = ais.artifact_id')
    			->join(array('u'=>'user'), 'ar.rating_user_id = u.user_id')
    			->join(array('r' => 'rating'), 'ar.rating_code = r.rating_code')
-   			->where('ais.status_code = ?', 'E')
+   			->where('ais.status_code = ?', '3')
    			->where('a.student_id = ?', $student_id)
    			->order('artifact_indicator_status_id DESC')
    			->limit(5);
@@ -185,6 +202,7 @@ class App_StudentService {
 	return $this->user->fetchRow($select);
 	}
 	
+	// C StClair
 	public function GetIndicatorsbyStandard($standard_id)
 	{
 		$select = $this->db->select()
@@ -196,6 +214,7 @@ class App_StudentService {
 		return $this->db->fetchAll($select);
 	}
 	
+	// C StClair
 	public function GetArtifactsbyIndicator($student_id, $indicator_id)
 	{
 		$select = $this->db->select()
@@ -208,6 +227,7 @@ class App_StudentService {
 		return $result;
 	}
 	
+	// C StClair
 	public function GetAllIndicatorsArtifactsbyStandard($student_id, $standard_id)
 	{
 		
@@ -230,10 +250,7 @@ class App_StudentService {
    		$result = $this->db->fetchAll($select);
 		return $result;
 	}
-	
-	
-	
-	
+		
 	
 	public function GetIndicatorNumbyIndicatorId($indicator_id)
 	{
@@ -242,25 +259,35 @@ class App_StudentService {
 		return $this->indicator->fetchRow($select);
 	}
 	
-	
+	// C StClair
 	public function NewArtifact($artifact_title, $course_id,
-				    $description, $media_extension, $userid)
+				    $description, $filename, $media_extension, $userid)
 	{
    		$params = array('artifact_title' => $artifact_title,
    				'description' => $description,
    				'media_extension' => $media_extension,
+				'filename' => $filename,
 				'course_id' => $course_id,
    				'student_id' => $userid);
    					
    		$this->artifact->insert($params);
 	}
+	public function NewArtifactIndicatorStatus($artifact_id, $indicator_id){
+		$params = array('artifact_id' => $artifact_id,
+				'indicator_id' => $indicator_id,
+				'status_code' => '1');
+		$this->artifact_indicator_status->insert($params);
+	}
    
+	// C StClair
 	public function RemoveArtifactIndicatorLink($artifact_id, $indicator_id){
 		$where = array();
 		$where[] = $this->db->quoteInto('artifact_id = ?', $artifact_id);
 		$where[] = $this->db->quoteInto('indicator_id = ?', $indicator_id);
 		$this->artifact_indicator_status->delete($where);
 	}
+	
+	// C StClair
 	public function GetCourse($course_number){
 		$select = $this->db->select()
 			       ->from('course', array('course_id'))
@@ -268,6 +295,8 @@ class App_StudentService {
 		$result = $this->db->fetchRow($select);
 		return $result;
 	}
+	
+	// C StClair
 	public function GetAllCourses(){
 		$select = $this->db->select()
 			       ->from('course', array('course_id', 'course_number'));

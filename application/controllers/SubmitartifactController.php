@@ -26,13 +26,13 @@ class SubmitartifactController extends Zend_Controller_Action
     public function indexAction()
     {
     	$this->view->standard_id = $this->_getParam('standard');
-	$this->view->artifact_id = $this->_getParam('artifactid');
+	$this->view->artifact_id = $this->_getParam('artifact');
 	$this->view->indicator_id = $this->_getParam('indicator');
     	$this->view->facultyinfo = $this->getFaculty();
 	
 	$param = "standard=" . $this->view->standard_id .
 		"&indicator=" . $this->view->indicator_id .
-		"&artifactid=" . $this->view->artifact_id;
+		"&artifact=" . $this->view->artifact_id;
     	$this->view->form = $this->getForm($param);
     }
     

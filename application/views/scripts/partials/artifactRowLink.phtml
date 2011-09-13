@@ -1,5 +1,15 @@
 <tr>
-	<td><?php $this->artifact_title?></td>
-	<td><?php $this->description ?></td>
-	<td><button type='button' onClick=\"parent.location='studentartifact' \">Link Artifact</button></td>
+	<td><?= $this->artifact_title?></td>
+	<td><?= $this->description ?></td>
+	
+<td><?= $this->standard_id; ?></td>
+<td><?= $this->standard_num; ?>	</td>
+<td><?= $this->artifact_id; ?>	</td>	             
+<td><?= $this->indicator_id; ?>
+	</td>	             
+	
+	
+	<td><button type='button'
+	    onClick="parent.location='indicators/link?standard=<?= $this->standard_id;?>&standardnum=<?= $this->standard_num; ?>&artifact=<?= $this->artifact_id; ?>&indicator=<?= $this->indicator_id; ?>' ">Link Artifact</button></td>
 </tr>
+

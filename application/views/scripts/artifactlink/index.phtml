@@ -1,12 +1,22 @@
-<h2>Select Artifact to Link to Standard: <?= $this->standard_id?>
-          Indicator: <?= $this->indicator_id ?></h2>
+<h2>Select Artifact to Link to Standard: <?= $this->standard_num?>
+          Indicator: <?= $this->indicator_num ?></h2>
 <?php echo "<table id=\"student_artifact_table\" class =\"student_artifact_table\" cellspacing=\"0\">";?>
 <?php echo "<tr>";
-          echo "<th>Artifact Title</th>";
-          echo "<th>Memo</th>";
-          echo "</tr>";
-          ?>
-<dl>
-<?php $this->partialLoop('partials/artifactRowLink.phtml', $this->artRowSet);?>
-<?php echo "</table>" ?>
-</dl>
+      echo "<th>Artifact Title</th>";
+      echo "<th>Memo</th>";
+      echo "</tr>";
+
+     // need to add stanard id, standard num, indicator id to each row
+     // otherwise this data gets lost in partials file
+    $newartRowSet = array();
+    $dataArray= array("standard_id" => $this->standard_id,
+                      "standard_num" => $this->standard_num,
+                      "indicator_id" => $this->indicator_id);
+	
+    for ($i=0; $i<sizeof($this->artRowSet); $i++){
+    	$newartRowSet[$i] = array_merge((array)$this->artRowSet[$i], (array)$dataArray);
+    }
+    echo "<dl>";
+    echo $this->partialLoop('partials/artifactRowLink.phtml', $newartRowSet);
+    echo "</table></dl>";
+    

@@ -27,12 +27,16 @@ class ArtifactlinkController extends Zend_Controller_Action
     {
 	// need to get the standard and indicator from URL and all user information
     	$this->view->standard_id = $this->_getParam('standard');
+	$this->view->standard_num = $this->_getParam('standardnum');
 	$this->view->indicator_id = $this->_getParam('indicator');
-    	
-    	$this->view->artRowSet = $this->studentService->GetAllArtifacts($this->view->userInfo['userID']);
+    	$this->view->indicator_num = $this->_getParam('indicatornum');
+	
+    	$this->view->artRowSet =
+		$this->studentService
+		     ->GetAllArtifactsNotLinkedtoIndicator($this->view->userInfo['userID'],
+							   $this->view->standard_id,
+							   $this->view->indicator_id);
 
-   // 	$this->view->indartRowSet = $this->studentService->GetAllIndicatorsArtifactsbyStandard(
-    //			$this->view->userInfo['userID'], $this->view->standard_id);
     }
 }
 

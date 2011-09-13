@@ -3,14 +3,22 @@
 </h2>
 <br />
 <?php 
+function disableButton(){
+	return "disabled='disabled'";
+}
+
 foreach($this->indRowSet as $indrow):
     echo "<h3>Indicator: " . $indrow['indicator_number'];
     echo " -- " . $indrow['description'] . "</h3>";
         
     echo "<button type='button' onClick=\"parent.location='artifactlink?standard=";
     echo $this->standard_id;
+    echo "&standardnum=";
+    echo $this->standard_num;
     echo "&indicator=";
     echo $indrow['indicator_id'];
+    echo "&indicatornum=";
+    echo $indrow['indicator_number'];
     echo "'\">Link New Artifact</button><br /><br />";
 	      
     echo "<table id=\"indicator_artifact_table\">";

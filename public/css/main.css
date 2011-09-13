@@ -1,9 +1,11 @@
 @CHARSET "ISO-8859-1";
 body {
+	width:996px;
 	background-color:#fff;
 	padding: 0;
 	margin: 0;
 	font-family: verdana;
+	font-size: 14px;
 }
 #header {
 	width:996px;
@@ -21,47 +23,23 @@ body {
 	
 }
 #side-navbar {
-	width:180px; 
+	width:170px; 
 	background-color:#fff; 
 	float:left; 
-	border-right: 1px dashed #ddd;
-	padding: 0px 0 0 8px;
-	margin-right: 10px;
-	min-height: 600px;              
+	border-right: 2px solid #ddd;
+	padding: 0px 0 0 4px;
+	margin-right: 4px;
+	min-height: 800px;              
 }
 #content {
-	background-color:#fff; 
-	padding:8px;
-	color: #333;
-}
-
-
-body {
+	width: 800px;
 	background-color:#fff;
-	padding: 0;
-	margin: 0;
-	font-family: verdana;
-}
-#header {
-	width:996px;
-	background-color:#70061D;
-	background-image: url('http://its.noctrl.edu/sites/all/themes/its/images/ITSBanner2.png');
-	background-position:right top;
-	background-repeat: no-repeat;
-	height:66px;
-	padding: 8px;
-}
-#header h1 {
-	color: #FFF;
-	font-family: verdana;
-	font-size: 24px;
-	
-}
-#content {
-	background-color:#fff; 
-	padding:8px;
+	float: right;
+	padding:6px;
 	color: #333;
 }
+
+
 h3{
 	font-weight: bold;
 	margin-bottom: 5px;
@@ -81,12 +59,14 @@ th {
 	margin-right:     0px;
 	padding-left:     20px;
 	padding-right:    20px;
+	font-size: 16px;
 }
 
 tr {
 	
 	font-family: helvetica, sans-serif;
-	height:      40px;
+	height:      35px;
+	
 }
 .bold{
 	font-weight: bold;
@@ -97,7 +77,9 @@ td {
 	padding-left:  10px;
 	padding-right: 10px;
 	text-align:    center;
-	/* Faculty Pending Table style */
+	font-size: 14px;
+}
+/* Faculty Pending Table style */
 .faculty_pending_table a {
 	
 	font-family: helvetica, sans-serif;
@@ -177,8 +159,8 @@ error {
  * This changes the indent of the login form.
  */
 div#login {
-	margin-top: 75px;
-	margin-left: 200px;
+	margin-top: 10px;
+	margin-left: 10px;
 
 }
 
