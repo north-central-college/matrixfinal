@@ -31,28 +31,31 @@ class App_FacultyService {
    		$this->indicator = new App_IndicatorTable();
 	}
 
-   
+        // Used by:GetArtifactsForFacultyIDWithOrderAndStatus
  	private function PrivateGetAllArtifactsForFacultyID($id)
-   	{   	 
-   		$select = $this->user->select()    							
-   						->from(array('u' => 'user'),'user_id')
-   						->from(array('s' => 'user'), array('s.last_name as student_last_name', 's.first_name as student_first_name', '*'))  
-   						->from(array('a' => 'artifact'), array('a.artifact_title as artifact_filename', 'a.artifact_id as this_artifact_id', '*'))
-   						->from(array('ar' => 'artifact_rating'), array('ar.rating_code as artifact_rating_code', 'ar.comments as artifact_comments', '*'))
-   						->from(array('r' => 'reflective_statement'), array('r.filename as reflective_filename', '*'))
-						->from(array('rr' => 'reflective_statement_rating'), array('rr.rating_code as reflective_rating_code', 'rr.comment as reflective_comment', '*'))
-   						->from(array('ais' => 'artifact_indicator_status'), array('DATE_FORMAT(ais.timestamp, \'%m/%d/%Y %h:%i %p\')as submitted_timestamp', '*'))
-   						->join(array('c' => 'course'),
-   							       'ar.rating_user_id = u.user_id && 
-   							   	ar.artifact_id = a.artifact_id && 
-   							   	ais.artifact_id = a.artifact_id &&
-   							   	ar.indicator_id = ais.indicator_id &&  							   	
-   							   	a.artifact_id = r.artifact_id &&
-   							   	a.course_id = c.course_id &&  
-   							   	ais.indicator_id = r.indicator_id && 							
-  							        a.student_id = s.user_id')
-   						->where('u.user_id = ?', $id)
-   						->setIntegrityCheck(false); 
+   	{   	$select = $this->user->select()    							
+   			->from(array('u' => 'user'),'user_id')
+   			->from(array('a' => 'artifact'), array('artifact_id', 'artifact_title',
+							       'filename as artifact_filename',
+							       'media_extension as artifact_media_extension'))
+   			->join(array('su' => 'user'), 'a.student_id = su.user_id', array('su.last_name as student_last_name', 'su.first_name as student_first_name', '*'))
+			->join(array('ais'=>'artifact_indicator_status'), 'a.artifact_id = ais.artifact_id
+			       && ais.status_code = 2',
+			       array('DATE_FORMAT(ais.timestamp, \'%m/%d/%Y %h:%i %p\')as submitted_timestamp'))
+   			->join(array('c'=>'course'), 'a.course_id = c.course_id', array('course_number'))
+   			->join(array('i'=> 'indicator'), 'i.indicator_id = ais.indicator_id',
+			       array('i.description as indicator_description', '*'))
+   			->join(array('s'=> 'standard'), 'i.standard_id = s.standard_id')
+   			->join(array('ar'=>'artifact_rating'), 'ar.artifact_id = ais.artifact_id
+			       && ar.rating_user_id = u.user_id', array('rating_user_id as artifact_rating_user_id'))
+   			->joinLeft(array('r' => 'reflective_statement'), 'r.artifact_id = ais.artifact_id &&
+				   r.indicator_id = ais.indicator_id', array('reflective_statement_id', 'reflective_statement_title',
+									     'filename as reflective_filename',
+									     'media_extension as reflective_media_extension'))
+			->joinLeft(array('rr' => 'reflective_statement_rating'), 'rr.reflective_statement_id = r.reflective_statement_id',
+				   array('rating_user_id as reflective_rating_user_id'))
+   			->where('u.user_id = ?', $id)
+   			->setIntegrityCheck(false); 
    	
    		return $select;				   			
    	}
@@ -97,6 +100,7 @@ class App_FacultyService {
    	 * @param string $order - column in database to sort by
    	 * @param int $status - the status column from artifact indicator status
    	 */
+	// Used in: LandingController
 	public function GetArtifactsForFacultyIDWithOrderAndStatus($id, $order, $status)
    	{   	 
    		$select = $this->PrivateGetAllArtifactsForFacultyID($id)
@@ -106,7 +110,14 @@ class App_FacultyService {
    						   						
 		return $this->user->fetchAll($select); 
    	}
-   	
+   	// C StClair
+	// Used in: FacultyevaluateController
+	public function GetRatings(){
+		$select = $this->db->select()
+   			->from(array('r' => 'rating'));
+			
+   		return $this->db->fetchAll($select);
+	}
 
    	/**
    	 * MD and PV
@@ -226,6 +237,8 @@ class App_FacultyService {
 		$result = $this->db->fetchAll($select);
 		return $result;
 	}
+	// C StClair
+	// Used in: IndicatorsController
 	public function NewArtifactRating($artifact_id, $indicator_id, $rating_user_id)
 	{
    		$params = array(
@@ -236,6 +249,8 @@ class App_FacultyService {
    		   					
    		$this->artifact_rating->insert($params);
 	}
+	// C StClair
+	// Used in: IndicatorsController
 	public function GetFacultyByName($name){
 		$fname = strtok($name, " ");
 		$lname = strtok(" ");

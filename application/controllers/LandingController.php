@@ -27,13 +27,14 @@ class LandingController extends Zend_Controller_Action
 		{
         		
 			$this->facultyService = new App_FacultyService();                           
-			$rowset = $facultyService->GetArtifactsForFacultyIDWithOrderAndStatus(
-				$this->view->userInfo['userID'],  'submitted_timestamp', 2);              
+			$rowset = $this->facultyService->GetArtifactsForFacultyIDWithOrderAndStatus(
+				$this->view->userInfo['userID'],  'submitted_timestamp', 2);
+			var_dump($rowset);
 			$this->view->user = $rowset->toArray();
 			$this->view->pagetitle = "Faculty Landing";
 	
 		}
-        	else 	//user is student
+        	else 	//user is a student
         	{
 			$this->view->pagetitle = "Student Landing";
 			$this->studentService = new App_StudentService();
@@ -67,7 +68,53 @@ class LandingController extends Zend_Controller_Action
 			$this->view->evaluated = $evalrows;
 		}
 	}
-	public function standardsAction()
+	 public function openartifactAction(){
+		//This will open a file chosen by the user.
+		                  
+	 	$this->view->artifact_id = $this->_getParam('artifact');
+		// Get student service for queries
+		$this->studentService = new App_StudentService();
+		$result = $this->studentService->GetArtifact($this->view->artifact_id);
+		$file = "uploads/s" . $result->student_id . "/" .
+			$result->filename . "." . $result->media_extension;
+		
+		header('Content-Description: File Transfer');
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename='.basename($file));
+		header('Content-Transfer-Encoding: binary');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+		header('Pragma: public');
+		header('Content-Length: ' . filesize($file));
+		ob_clean();
+		flush();
+		readfile($file);
+		exit;
+      }
+      public function openreflectiveAction(){
+		//This will open a file chosen by the user.
+		                  
+	 	$this->view->reflective_id = $this->_getParam('reflective');
+		// Get student service for queries
+		$this->studentService = new App_StudentService();
+		$result = $this->studentService->GetReflectiveStatement($this->view->reflective_id);
+		$file = "uploads/s" . $result->student_id . "/" .
+			$result->filename . "." . $result->media_extension;
+		
+		header('Content-Description: File Transfer');
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename='.basename($file));
+		header('Content-Transfer-Encoding: binary');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+		header('Pragma: public');
+		header('Content-Length: ' . filesize($file));
+		ob_clean();
+		flush();
+		readfile($file);
+		exit;
+      }
+      public function standardsAction()
 	{
 	    $this->_helper->redirector('index', 'student');
 	}

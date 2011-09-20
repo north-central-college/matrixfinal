@@ -1,0 +1,23 @@
+
+<script type="text/javascript">
+    function getRatings(param)
+    {
+        radiovalues = document.getElementsByName("rating");
+        for(i=0; i<radiovalues.length; i++){
+            if (radiovalues[i].checked){
+                rv = radiovalues[i].value;
+            }
+        
+        }
+        param = param + "&rating=" + rv;
+        // make sure - if yes, go to process method of facultyevaluate controller
+        // sending along needed data to update table, if not stay on same page
+        javascript:show_confirm("facultyevaluate/process?" + param,
+                                "facultyevaluate?" + param,
+                                "Rating this Artifact");
+    }
+</script>
+
+<h2>Select a Rating</h2>
+
+<?= $this->form;?>

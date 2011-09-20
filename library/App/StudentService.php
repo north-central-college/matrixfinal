@@ -39,18 +39,30 @@ class App_StudentService {
 	}
   
     // C StClair
+    // Used in: LandingController
+    // Used in: StandardsController
     public function GetRoleInfo($role_id)
 	{
 		$select = $this->role->select()->where('role_code = ?', $role_id);
 		return $this->role->fetchRow($select);
 	}
-   
+   // Used in: StudentartifactController
+   // Used in: FacultyreviewController
     public function GetArtifact($id)
     {
    		$select = $this->artifact->select()->where('artifact_id = ?', $id);
    		return $this->artifact->fetchRow($select);
     }
-    
+   // Used in: FacultyreviewController
+    public function GetReflective($id)
+    {
+   		$select = $this->reflective_statement->select()->where('reflective_statement_id = ?', $id);
+   		return $this->reflective_statement->fetchRow($select);
+    }
+   
+    // C StClair
+    // Used in: StandardsController
+    // Used in: StudentartifactController
     public function GetAllArtifacts($id){
 		$select = $this->db->select()
    			->from(array('a' => 'artifact'), array('artifact_id', 'artifact_title', 'description', 'timestamp'))
@@ -60,6 +72,7 @@ class App_StudentService {
    		return $this->db->fetchAll($select);
     }
     // C StClair
+    // Used in: ArtifactlinkController
     public function GetAllArtifactsNotLinkedtoIndicator($id, $standard, $indicator)
     {
    		$select = $this->db->select()
@@ -81,7 +94,8 @@ class App_StudentService {
     * Should rely on session variables for the $id. Hard-coded to user 1 for now.
     * @param int $id - student id number
     * @param int $aid - artifact id number
-    */   
+    */
+    // Used in: StudentartifactController
    public function GetAllArtifactDetails($id, $aid)
    {
    		$select = $this->db->select()
@@ -102,6 +116,7 @@ class App_StudentService {
    //artifact_indicator_table, meaning those that are not yet linked
    //will return only the five most recent uploads
    // Modified C StClair
+   // Used in: LandingController
     public function GetUploads($student_id)
 	{
    		$selectAIS = $this->artifact_indicator_status->select()
@@ -118,6 +133,7 @@ class App_StudentService {
      //and have a status of '1' (linked) but not submitted
      //will return only the five most recent links
      // Modified C StClair
+     // Used in: LandingController
 	public function GetLinkedArtifacts($student_id)
 	{
    		$select = $this->db->select()
@@ -140,6 +156,7 @@ class App_StudentService {
         //and have a status of 'S' (submitted)
         //will return only the five most recent submissions
 	// modified C StClair
+	// Used in: LandingController
 	public function GetSubmittedArtifacts($student_id)
 	{
    		$select = $this->db->select()
@@ -162,7 +179,8 @@ class App_StudentService {
 	//Database function to retrieve the evaluated artifacts for the user with the given id number
        //will return only those records that are in the artifact_indicator_status table 
        //and have a status of '3' (evaluated)
-       //will return only the five most recent evaluations 
+       //will return only the five most recent evaluations
+       // Used in: LandingController
 	public function GetEvaluatedArtifacts($student_id)
 	{
 		$select = $this->db->select()
@@ -183,8 +201,7 @@ class App_StudentService {
 		return $result;
 	}
 	
-	//find the standards for a specific program
-	//used to display student manage portfolio page
+       // Used in: StandardsController
        public function GetStandardsbyProgram($program)
 	{
 		$select = $this->standard->select()
@@ -203,6 +220,7 @@ class App_StudentService {
 	}
 	
 	// C StClair
+	// Used in: IndicatorsController
 	public function GetIndicatorsbyStandard($standard_id)
 	{
 		$select = $this->db->select()
@@ -215,6 +233,7 @@ class App_StudentService {
 	}
 	
 	// C StClair
+	// Used in: ArtifactsbyindicatorController
 	public function GetArtifactsbyIndicator($student_id, $indicator_id)
 	{
 		$select = $this->db->select()
@@ -228,6 +247,7 @@ class App_StudentService {
 	}
 	
 	// C StClair
+	// Used in: IndicatorsController
 	public function GetAllIndicatorsArtifactsbyStandard($student_id, $standard_id)
 	{
 		
@@ -251,7 +271,8 @@ class App_StudentService {
 		return $result;
 	}
 		
-	
+	// C StClair
+	// Used in: ArtifactsbyindicatorController
 	public function GetIndicatorNumbyIndicatorId($indicator_id)
 	{
 		$select = $this->indicator->select()
@@ -260,6 +281,7 @@ class App_StudentService {
 	}
 	
 	// C StClair
+	// Used in: StudentartifactController
 	public function NewArtifact($artifact_title, $course_id,
 				    $description, $filename, $media_extension, $userid)
 	{
@@ -272,6 +294,8 @@ class App_StudentService {
    					
    		$this->artifact->insert($params);
 	}
+	// C StClair
+	// Used in: IndicatorsController
 	public function NewArtifactIndicatorStatus($artifact_id, $indicator_id){
 		$params = array('artifact_id' => $artifact_id,
 				'indicator_id' => $indicator_id,
@@ -280,6 +304,7 @@ class App_StudentService {
 	}
    
 	// C StClair
+	// Used in: IndicatorsController
 	public function RemoveArtifactIndicatorLink($artifact_id, $indicator_id){
 		$where = array();
 		$where[] = $this->db->quoteInto('artifact_id = ?', $artifact_id);
@@ -288,6 +313,7 @@ class App_StudentService {
 	}
 	
 	// C StClair
+	// Used in: StudentartifactController
 	public function GetCourse($course_number){
 		$select = $this->db->select()
 			       ->from('course', array('course_id'))
@@ -297,6 +323,7 @@ class App_StudentService {
 	}
 	
 	// C StClair
+	// Used in: StudentartifactController
 	public function GetAllCourses(){
 		$select = $this->db->select()
 			       ->from('course', array('course_id', 'course_number'));

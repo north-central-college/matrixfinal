@@ -3,13 +3,7 @@ class ArtifactsbyindicatorController extends Zend_Controller_Action
 {
  	
     protected $studentService;
-    protected $user = 2;
-	
-	
-	
-	
-	
-	
+    
     public function preDispatch()
     {
 		$this->studentService = new App_StudentService();
@@ -26,12 +20,10 @@ class ArtifactsbyindicatorController extends Zend_Controller_Action
     {
     	$this->view->ind = $this->_getParam('indicator');
     	
-    	$indicator_num = 
-$this->studentService->GetIndicatorNumbyIndicatorId($this->view->ind);
+    	$indicator_num = $this->studentService->GetIndicatorNumbyIndicatorId($this->view->ind);
 		$this->view->indicatornum = $indicator_num;
 				
-		$artifacts = 
-$this->studentService->GetArtifactsbyIndicator($this->view->ind, $this->user);
+		$artifacts = $this->studentService->GetArtifactsbyIndicator($this->view->ind, $this->user);
 		$this->view->artifacts = $artifacts;
 		
 		var_dump($artifacts);

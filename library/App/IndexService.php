@@ -20,6 +20,7 @@ class App_IndexService {
 		$this->role = new App_RoleTable();
 	}
 	//Database function to retrieve the full name of the user with the given id number
+	// Used in: IndexController
 	public function GetUserInfo($student_name)
 	{
 		$select = $this->user->select()->where('username = ?', $student_name);

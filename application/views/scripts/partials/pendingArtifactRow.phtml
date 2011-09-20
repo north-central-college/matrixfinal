@@ -1,8 +1,18 @@
 <tr>
-	<td><?php $this->student_last_name ?>, <?php $this->student_first_name ?></td> 
-	<td><?php $this->indicator_id ?> </td>
-	<td><?php $this->artifact_filename ?> </td>
-	<td><?php $this->reflective_filename ?> </td>
-	<td><?php $this->course_number ?> </td>
-	<td><?php $this->submitted_timestamp ?> </td>
+	<td><?= $this->student_last_name ?>, <?= $this->student_first_name ?></td>
+	<td><?= $this->standard_number ?> </td>
+	<td><?= $this->indicator_number ?> </td>
+	<td><?= $this->indicator_description ?> </td>
+	<td><a href="landing/openartifact?artifact=<?= $this->artifact_id?>">
+		<?= $this->artifact_title?> </a></td>
+	<td><a href="landing/openreflective?reflective=<?= $this->reflective_statement_id?>">
+		<?= $this->reflective_statement_title?> </a></td>
+	<td><?= $this->course_number ?> </td>
+	<td><?= $this->submitted_timestamp ?> </td>
+	
+	<td><button type='button'
+	    onClick="parent.location='facultyevaluate/index?artifact=<?= $this->artifact_id; ?>&indicator=<?= $this->indicator_id; ?>' ">Evaluate Artifact   </button></td>
+	<td><button type='button'
+	    onClick="parent.location='facultyevaluate/index?reflective=<?= $this->reflective_statement_id; ?>' ">Evaluate Reflection</button></td>
 </tr>
+

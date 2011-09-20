@@ -3,10 +3,12 @@ Welcome, <strong><?= $this->userInfo['first_name'] ?> <?= $this->userInfo['last_
 
 <?php
       if ($this->userInfo['role'] == 'F'){
-	  echo "<table id=\'faculty_pending_table\'>";
+	  echo "<p>Current Pending Artifacts</p><table id=\'faculty_pending_table\'>";
 	  echo "<tr>";
 	  echo "<th>Student Name</th>";
+	  echo "<th>Standard</th>";
 	  echo "<th>Indicator</th>";
+	  echo "<th>Description</th>";
 	  echo "<th>Artifact</th>";
 	  echo "<th>Reflective Statement</th>";
 	  echo "<th>Course</th>";
