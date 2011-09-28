@@ -24,22 +24,19 @@ class FacultyevaluateController extends Zend_Controller_Action
     }
 
     public function indexAction()
-    {
-    	$this->view->artifact_id = $this->_getParam('artifact');
-	$this->view->indicator_id = $this->_getParam('indicator');
-    	$this->view->ratinginfo = $this->getRatings();
-	
-	$param = "indicator=" . $this->view->indicator_id .
-		"artifact=" . $this->view->artifact_id;
-	
-    	$this->view->form = $this->getForm($param);
-    }
-    public function index2Action()
-    {
-    	$this->view->reflective_statement_id = $this->_getParam('reflective');
+    {   // get rating values to populate form
 	$this->view->ratinginfo = $this->getRatings();
 	
-	$param = "reflective=" . $this->view->reflective_statement_id;
+	// retrieve ids to pass to form - will need to process
+    	$this->view->artifact_rating_id = $this->_getParam('arid');
+	$this->view->reflective_statement_rating_id = $this->_getParam('rrid');
+	$this->view->ais_id = $this->_getParam('aisid');
+	$this->view->rss_id = $this->_getParam('rssid');
+	
+	$param = "arid=" . $this->view->artifact_rating_id .
+		"&rrid=" . $this->view->reflective_statement_rating_id .
+		"&aisid=" . $this->view->ais_id .
+		"&rssid=" . $this->view->rss_id;
 	
     	$this->view->form = $this->getForm($param);
     }
@@ -48,21 +45,48 @@ class FacultyevaluateController extends Zend_Controller_Action
     	return new Application_Model_SelectratingForm($this->view->ratinginfo, $param);
     }
     public function processAction()
-    {  // function called after rating chosen for submit for approval process 
-	$this->facultyService = new App_FacultyService();
-	$this->view->standard_id = $this->_getParam('standard');
-	$this->view->standard_num = $this->_getParam('standardnum');
-	$this->view->artifact_id = $this->_getParam('artifact');
-	$this->view->indicator_id = $this->_getParam('indicator');
-	$this->view->facultyRowSet = $this->facultyService->GetFacultyByName(
-					$this->_getParam('faculty'));
+    {  // function called after rating chosen - need to update rating info
+	// ******* FIX *************
+	// This function grabs too much data from url
+	// but loses form data - need to find a fix for this
 	
-    	$this->view->faculty_id = $this->view->facultyRowSet[0]['user_id'];
-	$this->facultyService->NewArtifactRating($this->view->artifact_id,
-						 $this->view->indicator_id,
-						 $this->view->faculty_id);
-	$this->_redirect('/indicators?standard=' . $this->view->standard_id)
-	           . '&standardnum=' . $this->view->standard_num;
+	$this->facultyService = new App_FacultyService();
+	
+	// get passed params
+    	$artifact_rating_id = $this->_getParam('arid');
+	$reflective_statement_rating_id = $this->_getParam('rrid');
+	$ais_id = $this->_getParam('aisid');
+	$rss_id = $this->_getParam('rssid');
+	
+	// Retrieve the form and assign it to the view
+	$param = "arid=" . $artifact_rating_id .
+		"&rrid=" . $reflective_statement_rating_id .
+		"&aisid=" . $ais_id .
+		"&rssid=" . $rss_id;
+	$this->view->ratinginfo = $this->getRatings();
+	
+	$form = $this->getForm($this->view->ratinginfo, $param);
+    
+	$request = $this->getRequest();
+	if($request->isPost())
+      	{
+	    $formData = $request->getPost();
+		     
+	    if ($form->isValid($formData))
+	    {
+		// getting form data
+		$artifact_rating = $formData['artrating'];
+		$reflective_rating = $formData['refrating'];
+		$artifact_rating_comment = $formData['acomment'];
+		$reflective_rating_comment = $formData['rcomment'];
+		$this->facultyService->UpdateRatingForArtifactAndReflectiveStatement(
+		    $artifact_rating_id, $reflective_statement_rating_id,
+		    $artifact_rating, $artifact_rating_comment,
+		    $reflective_rating, $reflective_rating_comment,
+		    $ais_id, $rss_id);
+	    }
+	}
+	$this->_redirect('/landing');
     }
     public function getRatings()
     {

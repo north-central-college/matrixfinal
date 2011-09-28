@@ -7,13 +7,14 @@
 	{
 	   var r=confirm("Are you sure?\n" + msg);
 	   if (r==true)
-	   {    
-		window.location = "http://localhost/mpfinal/public/" + good;
+	   {
+		return true;
+		//window.location = "http://localhost/mpfinal/public/" + good;
 		//alert("You pressed OK!");
            }
 	   else
-	   {
-		window.location = "http://localhost/mpfinal/public/" + bad;
+	   {    return false;
+		//window.location = "http://localhost/mpfinal/public/" + bad;
 		//alert("You pressed Cancel!");
            }
 	}

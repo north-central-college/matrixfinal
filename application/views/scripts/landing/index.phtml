@@ -8,13 +8,28 @@ Welcome, <strong><?= $this->userInfo['first_name'] ?> <?= $this->userInfo['last_
 	  echo "<th>Student Name</th>";
 	  echo "<th>Standard</th>";
 	  echo "<th>Indicator</th>";
-	  echo "<th>Description</th>";
 	  echo "<th>Artifact</th>";
 	  echo "<th>Reflective Statement</th>";
 	  echo "<th>Course</th>";
 	  echo "<th>Date Submitted</th>";
 	  echo "</tr>";
-	  echo $this->partialLoop('partials/pendingArtifactRow.phtml', $this->user);
+	  echo $this->partialLoop('partials/pendingArtifactRow.phtml', $this->pending);
+	  echo "</table><a href=\'more.htm\'>more...</a>";
+          
+	  
+	  echo "<p>Current Reviewed Artifacts</p><table id=\'faculty_reviewed_table\'>";
+	  echo "<tr>";
+	  echo "<th>Student Name</th>";
+	  echo "<th>Standard</th>";
+	  echo "<th>Indicator</th>";
+	  echo "<th>Artifact</th>";
+	  echo "<th>Reflective Statement</th>";
+	  echo "<th>Course</th>";
+	  echo "<th>Date Submitted</th>";
+	  echo "<th>Artifact Rating</th>";
+	  echo "<th>Reflective Rating</th>";
+	  echo "</tr>";
+	  echo $this->partialLoop('partials/reviewedArtifactRow.phtml', $this->reviewed);
 	  echo "</table><a href=\'more.htm\'>more...</a>";
       }
       else{

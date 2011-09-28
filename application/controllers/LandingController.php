@@ -25,14 +25,19 @@ class LandingController extends Zend_Controller_Action
                                 
 		if ($sessionNamespace->userRole == 'F')  //user is a faculty
 		{
-        		
-			$this->facultyService = new App_FacultyService();                           
-			$rowset = $this->facultyService->GetArtifactsForFacultyIDWithOrderAndStatus(
+        		$this->view->pagetitle = "Faculty Landing";
+			$this->facultyService = new App_FacultyService();
+			
+			$rowset = $this->facultyService->GetPendingArtifacts(
 				$this->view->userInfo['userID'],  'submitted_timestamp', 2);
-			var_dump($rowset);
-			$this->view->user = $rowset->toArray();
-			$this->view->pagetitle = "Faculty Landing";
-	
+			//var_dump($rowset);
+			$this->view->pending = $rowset->toArray();
+			
+			$rowset = $this->facultyService->GetReviewedArtifacts(
+			   	  $this->view->userInfo['userID'], 'submitted_timestamp', 3);
+			$this->view->reviewed = $rowset->toArray();
+			
+		
 		}
         	else 	//user is a student
         	{

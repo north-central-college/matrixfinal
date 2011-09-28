@@ -43,6 +43,9 @@ class StudentartifactController extends Zend_Controller_Action
 	        $this->view->courses = $this->getCourses();
 		
 		// Retrieve the form and assign it to the view
+		
+		// ****** DON'T NEED BOTH - FIX
+		
 		$this->view->form = $this->getForm();
     		$form = $this->getForm();
 		// Get student service for queries

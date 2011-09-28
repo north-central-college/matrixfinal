@@ -46,14 +46,16 @@ class App_StudentService {
 		$select = $this->role->select()->where('role_code = ?', $role_id);
 		return $this->role->fetchRow($select);
 	}
-   // Used in: StudentartifactController
-   // Used in: FacultyreviewController
+    
+    // Used in: StudentartifactController
+    // Used in: FacultyreviewController
     public function GetArtifact($id)
     {
    		$select = $this->artifact->select()->where('artifact_id = ?', $id);
    		return $this->artifact->fetchRow($select);
     }
-   // Used in: FacultyreviewController
+   
+    // Used in: FacultyreviewController
     public function GetReflective($id)
     {
    		$select = $this->reflective_statement->select()->where('reflective_statement_id = ?', $id);
@@ -71,6 +73,7 @@ class App_StudentService {
 			
    		return $this->db->fetchAll($select);
     }
+    
     // C StClair
     // Used in: ArtifactlinkController
     public function GetAllArtifactsNotLinkedtoIndicator($id, $standard, $indicator)
@@ -96,8 +99,8 @@ class App_StudentService {
     * @param int $aid - artifact id number
     */
     // Used in: StudentartifactController
-   public function GetAllArtifactDetails($id, $aid)
-   {
+    public function GetAllArtifactDetails($id, $aid)
+    {
    		$select = $this->db->select()
    			->from(array('a' => 'artifact'), array('artifact_id', 'artifact_title', 'description', 'a.timestamp as upload_timestamp'))
    			->from(array('ais' => 'artifact_indicator_status'), array('artifact_id', 'indicator_id', 'status_code', 'ais.timestamp as link_timestamp'))
@@ -109,14 +112,14 @@ class App_StudentService {
    			->where('u.user_id = ?', $id)
    			->where('a.artifact_id = ?', $aid);
    		return $this->db->fetchAll($select);
-   }
+    }
    
-   //Database function to retrieve the uploaded artifacts for the user with the given id number
-   //will return only those records that are in the artifact table but NOT in the
-   //artifact_indicator_table, meaning those that are not yet linked
-   //will return only the five most recent uploads
-   // Modified C StClair
-   // Used in: LandingController
+    //Database function to retrieve the uploaded artifacts for the user with the given id number
+    //will return only those records that are in the artifact table but NOT in the
+    //artifact_indicator_table, meaning those that are not yet linked
+    //will return only the five most recent uploads
+    // Modified C StClair
+    // Used in: LandingController
     public function GetUploads($student_id)
 	{
    		$selectAIS = $this->artifact_indicator_status->select()
@@ -134,7 +137,7 @@ class App_StudentService {
      //will return only the five most recent links
      // Modified C StClair
      // Used in: LandingController
-	public function GetLinkedArtifacts($student_id)
+     public function GetLinkedArtifacts($student_id)
 	{
    		$select = $this->db->select()
    			->from(array('a' => 'artifact'), array('artifact_id', 'artifact_title'))
@@ -151,13 +154,13 @@ class App_StudentService {
 		return $result;
 	}
    
-	//Database function to retrieve the submitted artifacts for the user with the given id number
-        //will return only those records that are in the artifact_indicator_status table 
-        //and have a status of 'S' (submitted)
-        //will return only the five most recent submissions
-	// modified C StClair
-	// Used in: LandingController
-	public function GetSubmittedArtifacts($student_id)
+     //Database function to retrieve the submitted artifacts for the user with the given id number
+     //will return only those records that are in the artifact_indicator_status table 
+     //and have a status of 'S' (submitted)
+     //will return only the five most recent submissions
+     // modified C StClair
+     // Used in: LandingController
+     public function GetSubmittedArtifacts($student_id)
 	{
    		$select = $this->db->select()
    			->from(array('a' => 'artifact'), array('artifact_id', 'artifact_title'))
@@ -174,14 +177,14 @@ class App_StudentService {
    			
    		$result = $this->db->fetchAll($select);
 		return $result;
-	}
+     }
 	
-	//Database function to retrieve the evaluated artifacts for the user with the given id number
-       //will return only those records that are in the artifact_indicator_status table 
-       //and have a status of '3' (evaluated)
-       //will return only the five most recent evaluations
-       // Used in: LandingController
-	public function GetEvaluatedArtifacts($student_id)
+      //Database function to retrieve the evaluated artifacts for the user with the given id number
+      //will return only those records that are in the artifact_indicator_status table 
+      //and have a status of '3' (evaluated)
+      //will return only the five most recent evaluations
+      // Used in: LandingController
+      public function GetEvaluatedArtifacts($student_id)
 	{
 		$select = $this->db->select()
    			->from(array('a' => 'artifact'), array('artifact_id', 'artifact_title'))
@@ -209,6 +212,7 @@ class App_StudentService {
 		
 		return $this->standard->fetchAll($select);
 	}
+	/*
 	//find the role of a specific student
 	//used to get role code for the standards page
 	public function GetRolebyStudentId($student_id)
@@ -218,6 +222,7 @@ class App_StudentService {
 			
 	return $this->user->fetchRow($select);
 	}
+	*/
 	
 	// C StClair
 	// Used in: IndicatorsController
@@ -294,6 +299,7 @@ class App_StudentService {
    					
    		$this->artifact->insert($params);
 	}
+	
 	// C StClair
 	// Used in: IndicatorsController
 	public function NewArtifactIndicatorStatus($artifact_id, $indicator_id){

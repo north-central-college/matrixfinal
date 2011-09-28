@@ -39,22 +39,26 @@ class App_FacultyService {
 							       'filename as artifact_filename',
 							       'media_extension as artifact_media_extension'))
    			->join(array('su' => 'user'), 'a.student_id = su.user_id', array('su.last_name as student_last_name', 'su.first_name as student_first_name', '*'))
-			->join(array('ais'=>'artifact_indicator_status'), 'a.artifact_id = ais.artifact_id
-			       && ais.status_code = 2',
-			       array('DATE_FORMAT(ais.timestamp, \'%m/%d/%Y %h:%i %p\')as submitted_timestamp'))
+			->join(array('ais'=>'artifact_indicator_status'), 'a.artifact_id = ais.artifact_id',
+			       array('artifact_indicator_status_id as ais_id', 'DATE_FORMAT(ais.timestamp, \'%m/%d/%Y %h:%i %p\')as submitted_timestamp'))
    			->join(array('c'=>'course'), 'a.course_id = c.course_id', array('course_number'))
    			->join(array('i'=> 'indicator'), 'i.indicator_id = ais.indicator_id',
 			       array('i.description as indicator_description', '*'))
    			->join(array('s'=> 'standard'), 'i.standard_id = s.standard_id')
    			->join(array('ar'=>'artifact_rating'), 'ar.artifact_id = ais.artifact_id
-			       && ar.rating_user_id = u.user_id', array('rating_user_id as artifact_rating_user_id'))
+			       && ar.rating_user_id = u.user_id',
+			       array('artifact_rating_id', 'rating_user_id as artifact_rating_user_id',
+				     'rating_code as artifact_rating', 'comments as artifact_comment'))
    			->joinLeft(array('r' => 'reflective_statement'), 'r.artifact_id = ais.artifact_id &&
 				   r.indicator_id = ais.indicator_id', array('reflective_statement_id', 'reflective_statement_title',
 									     'filename as reflective_filename',
 									     'media_extension as reflective_media_extension'))
 			->joinLeft(array('rr' => 'reflective_statement_rating'), 'rr.reflective_statement_id = r.reflective_statement_id',
-				   array('rating_user_id as reflective_rating_user_id'))
-   			->where('u.user_id = ?', $id)
+				   array('reflective_statement_rating_id', 'rating_user_id as reflective_rating_user_id',
+					 'rating_code as reflective_rating', 'comment as reflective_comment'))
+   			->joinLeft(array('rss' => 'reflective_statement_status'), 'rss.reflective_statement_id = r.reflective_statement_id',
+				   array('reflective_statement_status_id as reflective_ss_id'))
+			->where('u.user_id = ?', $id)
    			->setIntegrityCheck(false); 
    	
    		return $select;				   			
@@ -68,14 +72,14 @@ class App_FacultyService {
    	 * @param int $id - faculty id number
    	 * @param int $artifactid - artifact id number
    	 */
-   	public function GetArtifactByID($id, $artifactid)
+   /*	public function GetArtifactByID($id, $artifactid)
    	{ 	 
    		$select = $this->PrivateGetAllArtifactsForFacultyID($id)
    						->where('a.artifact_id = ?', $artifactid)	
    						->setIntegrityCheck(false); 				   						
 		return $this->user->fetchAll($select); 
    	}
-   	
+   */	
    	/**
    	 * MD and PV
    	 * Public function to get all artifacts associated with a specific faculty member
@@ -83,25 +87,24 @@ class App_FacultyService {
 	 * Usage: Not used
    	 * @param int $id - faculty id number
    	 */
-	public function GetAllArtifactsForFacultyID($id)
+/*	public function GetAllArtifactsForFacultyID($id)
    	{   	 
    		$select = $this->PrivateGetAllArtifactsForFacultyID($id)
    						->setIntegrityCheck(false); 				   						
 		return $this->user->fetchAll($select); 
    	}
-   	
+*/ 	
    	/**
    	 * MD and PV
-   	 * Public function to get all artifacts associated with a specific faculty member, allows you to 
+   	 * Public function to get all pending artifacts associated with a specific faculty member, allows you to 
    	 * specify sort order and artifact status
-	 * NOTE: should use a registry for the $id, but for now we are just passing the integer id variable
-	 * Usage: FacultylandingController indexAction
-   	 * @param int $id - faculty id number
+	 * @param int $id - faculty id number
    	 * @param string $order - column in database to sort by
    	 * @param int $status - the status column from artifact indicator status
    	 */
+	// Modified C St.Clair
 	// Used in: LandingController
-	public function GetArtifactsForFacultyIDWithOrderAndStatus($id, $order, $status)
+	public function GetPendingArtifacts($id, $order, $status)
    	{   	 
    		$select = $this->PrivateGetAllArtifactsForFacultyID($id)
    						->where('ais.status_code = ?', $status)				
@@ -110,7 +113,19 @@ class App_FacultyService {
    						   						
 		return $this->user->fetchAll($select); 
    	}
-   	// C StClair
+	
+   	// Used in: LandingController
+	public function GetReviewedArtifacts($id, $order, $status)
+   	{   	 
+   		$select = $this->PrivateGetAllArtifactsForFacultyID($id)
+   						->where('ais.status_code = ?', $status)				
+   						->order($order)  	
+   						->setIntegrityCheck(false); 
+   						   						
+		return $this->user->fetchAll($select); 
+   	}
+	
+	// C StClair
 	// Used in: FacultyevaluateController
 	public function GetRatings(){
 		$select = $this->db->select()
@@ -124,7 +139,7 @@ class App_FacultyService {
    	 * Returns an associative array of descriptions from the rating table
 	 * Usage: ApproveArtifactForm
    	 */
-   	public function GetRatingDescriptions()
+ /*  	public function GetRatingDescriptions()
    	{
    		$select = $this->user->select()    							
    						->from('rating', 'description')   						
@@ -132,13 +147,13 @@ class App_FacultyService {
    		$rowset = $this->user->fetchAll($select)->toArray();
    		return $rowset;
    	}
-   	
+ */	
    	/**
    	 * MD and PV
    	 * Returns an associative array of rating_codes from the rating table
 	 * Usage: ApproveArtifactForm
    	 */
-   	public function GetRatingCodes()
+ /*  	public function GetRatingCodes()
    	{
    		$select = $this->user->select()    							
    						->from('rating', 'rating_code')   						
@@ -146,58 +161,60 @@ class App_FacultyService {
    		$rowset = $this->user->fetchAll($select)->toArray();
    		return $rowset;
    	}
-   	
+ */	
    	/**
    	 * MD and PV
 	 * Updates the rating and comments for a specific artifact and reflective/cover letter, based
 	 * on what was in the approve artifact form. Updates both individually.
-	 * Usage: FacultyapproveartifactsController processAction
-   	 * @param int $artifactratingid - artifact_rating_id from artifact_rating table
-   	 * @param int $reflectiveratingid - reflective_statement_id from reflective_statement table
+	 * @param int $artifactRatingid - artifact_rating_id from artifact_rating table
+   	 * @param int $reflectiveRatingid - reflective_statement_rating_id from reflective_statement_rating table
    	 * @param string $artifactComment - artifacts comments from the approve artifact form
    	 * @param string $artifactRating - artifact rating from the approve artifact form
    	 * @param string $coverLetterComment - reflective comments from the approve artifact form
    	 * @param string $coverLetterRating - reflective rating from the approve artifact form
    	 * @param bool $shouldSubmit - if the comments and rating should be submitted or just saved
+   	 * modified C St.Clair
+	 * used in FacultyevaluateController
    	 */
-   	public function SaveArtifactApproveFormWithStatus($artifactratingid, $reflectiveratingid, 
-   													$artifactComment, $artifactRating, 
-   													$coverLetterComment, $coverLetterRating, 
-   													$shouldSubmit)
+   	public function UpdateRatingForArtifactAndReflectiveStatement(
+			$artifactRatingid, $reflectiveRatingid, 
+   			$artifactRating, $artifactComment,
+			$reflectiveRating, $reflectiveComment, $aisid, $rssid)
    	{	
-   		//Update the artifact comments and rating   		
-   		$artifactparams = array('comments' => $artifactComment,
-   						'rating_code' => $artifactRating);
-   		$artifactwhere = "artifact_rating_id = " . $artifactratingid;
-   		
-   		//if should submit is set change the status of this artifact indicator status to evaluated
-   	 	if($shouldSubmit)
-        {
-        	$artifactparams[0]['ais.status_code'] = 3;
-        }
-        
-   	 	$this->db->update('artifact_rating', $artifactparams, $artifactwhere);   	 	
+   		//Update the artifact's rating   		
+   		$params = array('rating_code' => $artifactRating,
+				'comments' => $artifactComment);
+   		$where = "artifact_rating_id = " . $artifactRatingid;
+		$this->db->update('artifact_rating', $params, $where);   	 	
   	 	   	 	
-   		//Update the reflective statement comments and rating   	
-   	 	$reflectiveparams = array('comments' => $coverLetterComment,
-   						'rating_code' => $coverLetterRating);
-   		$reflectivewhere = "reflective_statement_id = " . $reflectiveratingid;
-   		
-   	 	$this->db->update('reflective_statement', $reflectiveparams, $reflectivewhere);
+		//Update the artifact's status
+		$params = array('status_code' => 3);
+		$where = "artifact_indicator_status_id = " . $aisid;
+		$this->db->update('artifact_indicator_status', $params, $where);   	 	
+  	 	
+   		//Update the reflective statement's rating   	
+   	 	$params = array('rating_code' => $reflectiveRating,
+				'comment' => $reflectiveComment);
+   		$where = "reflective_statement_rating_id = " . $reflectiveRatingid;
+		$this->db->update('reflective_statement_rating', $params, $where);
    	 	
+		//Update the reflective statement's status
+		$params = array('status_code' => 3);
+		$where = "reflective_statement_status_id = " . $rssid;
+		$this->db->update('reflective_statement_status', $params, $where);   
    	 	return true;
    	}
    	
    	
    	
    	
-	public function SelectUser($username, $password){
-   		$select = $this->db->select()->from('user', 'username')->where("username = '$username'");
-   		$stmt = $select->query();
+	//public function SelectUser($username, $password){
+   	//	$select = $this->db->select()->from('user', 'username')->where("username = '$username'");
+   	//	$stmt = $select->query();
    		
    		
-   		$select2 = $this->db->select()->from('user', 'password')->where("username = '$username'");
-   		$stmt2 = $select2->query();
+   	//	$select2 = $this->db->select()->from('user', 'password')->where("username = '$username'");
+   	//	$stmt2 = $select2->query();
    		
    		
    		/*if (count($stmt2->fetchAll()) == 0)
@@ -205,10 +222,10 @@ class App_FacultyService {
    			return array('0' => 'invalid');
    		}*/
    		
-   		return $stmt2->fetchAll();
-	}
+   	//	return $stmt2->fetchAll();
+	//}
    
-	
+	/*
    
 	/**
 	 * KG, PA
@@ -217,17 +234,18 @@ class App_FacultyService {
 	 * Call this function only after confirming that the user exists in the database.
 	 * This is done by calling the ValidUser function above before calling this function.
 	 */
-	public function GetUserRole($username){
-   		$select = $this->db->select()->from('user', 'role')->where("username = '$username'");
-   		$stmt = $select->query();
+	//public function GetUserRole($username){
+   //		$select = $this->db->select()->from('user', 'role')->where("username = '$username'");
+   //		$stmt = $select->query();
    		
-   		$roleEntry = $stmt->fetchAll();
-   		
-   		$roleArray = $roleEntry[0];
-   		
-   		return $roleArray['role'];		
-	}
+   //		$roleEntry = $stmt->fetchAll();
+   //		
+   //		$roleArray = $roleEntry[0];
+   //		
+   //		return $roleArray['role'];		
+	//}
 	
+	/*
 	public function GetAllFaculty(){
 		$select = $this->db->select()
 			       ->from('user', array(
@@ -237,6 +255,7 @@ class App_FacultyService {
 		$result = $this->db->fetchAll($select);
 		return $result;
 	}
+	*/
 	// C StClair
 	// Used in: IndicatorsController
 	public function NewArtifactRating($artifact_id, $indicator_id, $rating_user_id)
