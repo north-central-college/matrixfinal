@@ -9,25 +9,24 @@ Welcome, <strong><?= $this->userInfo['first_name'] ?> <?= $this->userInfo['last_
 	  echo "<th>Standard</th>";
 	  echo "<th>Indicator</th>";
 	  echo "<th>Artifact</th>";
-	  echo "<th>Reflective Statement</th>";
+	  echo "<th>Cover Letter</th>";
 	  echo "<th>Course</th>";
 	  echo "<th>Date Submitted</th>";
 	  echo "</tr>";
 	  echo $this->partialLoop('partials/pendingArtifactRow.phtml', $this->pending);
 	  echo "</table><a href=\'more.htm\'>more...</a>";
-          
-	  
+          	  
 	  echo "<p>Current Reviewed Artifacts</p><table id=\'faculty_reviewed_table\'>";
 	  echo "<tr>";
 	  echo "<th>Student Name</th>";
 	  echo "<th>Standard</th>";
 	  echo "<th>Indicator</th>";
 	  echo "<th>Artifact</th>";
-	  echo "<th>Reflective Statement</th>";
+	  echo "<th>Cover Sheet</th>";
 	  echo "<th>Course</th>";
 	  echo "<th>Date Submitted</th>";
 	  echo "<th>Artifact Rating</th>";
-	  echo "<th>Reflective Rating</th>";
+	  echo "<th>Cover Sheet Rating</th>";
 	  echo "</tr>";
 	  echo $this->partialLoop('partials/reviewedArtifactRow.phtml', $this->reviewed);
 	  echo "</table><a href=\'more.htm\'>more...</a>";
@@ -36,62 +35,118 @@ Welcome, <strong><?= $this->userInfo['first_name'] ?> <?= $this->userInfo['last_
 	  echo "<p>Your current program is <strong>";
 	  echo $this->roledesc->description;
 	  echo"</strong></p>";
-	  echo "</div><hr><button type='button' ";
-	  
-	  	  
-	  echo "onClick=\"parent.location='studentartifact' \">Upload Artifacts</button>";
-	  echo "<button type='button' onClick=\"parent.location='standards' \">Manage Portfolio</button>
-	      <br><br>
-	      <hr><br>";
-	  echo "<div id='uploads'>
-	      <strong>Recent Uploads</strong>
-	      <br>
-	      <table id=\'uploaded_artifacts_table\'>
-	      <tr>
-	         <th>Artifact Title</th>
-	      </tr><dl>";
-	  echo $this->partialLoop('partials/uploadRow.phtml', $this->uploads);
-	  echo "</table></dl><br></div>";
-
-	  echo "<div id='linked'>
-	      <strong>Recent Linked Artifacts</strong>
-	      <table id=\'linked_table\'>
-	      <tr>
-		  <th>Artifact Title</th>
-		  <th>Course</th>
-		  <th>Standard</th>
-		  <th>Indicator</th>
-	      </tr><dl>";
-	  echo $this->partialLoop('partials/linkedArtifactRow.phtml', $this->links);
-	  echo "</table></dl><br></div>";
-
-  	  echo "<div id='submissions'>
-	      <strong>Recent Submissions</strong>
-	      <br>
-	      <table id=\'submitted_table\'>
-	      <tr>
-		  <th>Artifact Title</th>
-		  <th>Course</th>
-		  <th>Standard</th>
-		  <th>Indicator</th>
-		  <th>Professor</th>
-	      </tr><dl>";
-	  echo $this->partialLoop('partials/submissionRow.phtml', $this->submit); 
-	  echo "</table></dl><br></div>";
-	  echo "<div id='feedback'>
-	      <strong>Recent Feedback</strong>
-	      <br>
-	      <table id=\'eval_table\'>
-	      <tr>
-	         <th>Artifact Title</th>
-	         <th>Course</th>
-	         <th>Standard</th>
-	         <th>Indicator</th>
-	         <th>Professor</th>
-	         <th>Rating</th>
-	      </tr><dl>";
-	  echo $this->partialLoop('partials/evaluatedRow.phtml', $this->evaluated);
-	  echo "</table></dl><br></div>";
+	  if($this->userInfo['role'] == 'U'){
+	     echo "</div><hr><button type='button' ";
+	     echo "onClick=\"parent.location='studentartifact' \">Upload Artifacts</button>";
+	     echo "<button type='button' onClick=\"parent.location='standards' \">Manage Portfolio</button>
+	         <br><br>
+	         <hr><br>";
+	     echo "<div id='uploads'>
+	         <strong>Recent Uploads</strong>
+	         <br>
+	         <table id=\'uploaded_artifacts_table\'>
+	         <tr>
+	            <th>Artifact Title</th>
+	    	 <th>Course</th>
+	         </tr><dl>";
+	     echo $this->partialLoop('partials/uploadRow.phtml', $this->uploads);
+	     echo "</table></dl><br></div>";
+      
+	     echo "<div id='linked'>
+	         <strong>Recent Linked Artifacts</strong>
+	         <table id=\'linked_table\'>
+	         <tr>
+	    	  <th>Artifact Title</th>
+	    	  <th>Course</th>
+	    	  <th>Standard</th>
+	         </tr><dl>";
+	     echo $this->partialLoop('partials/linkedArtifactRow2.phtml', $this->links);
+	     echo "</table></dl><br></div>";
+      
+	     echo "<div id='submissions'>
+	         <strong>Recent Submissions</strong>
+	         <br>
+	         <table id=\'submitted_table\'>
+	         <tr>
+	    	  <th>Artifact Title</th>
+	    	  <th>Course</th>
+	    	  <th>Standard</th>
+	    	  <th>Evaluator</th>
+	         </tr><dl>";
+	     echo $this->partialLoop('partials/submissionRow2.phtml', $this->submit); 
+	     echo "</table></dl><br></div>";
+	     echo "<div id='feedback'>
+	         <strong>Recent Feedback</strong>
+	         <br>
+	         <table id=\'eval_table\'>
+	         <tr>
+	            <th>Artifact Title</th>
+	            <th>Course</th>
+	            <th>Standard</th>
+	            <th>Evaluator</th>
+	            <th>Artifact Rating</th>
+	         </tr><dl>";
+	     echo $this->partialLoop('partials/evaluatedRow2.phtml', $this->evaluated);
+	     echo "</table></dl><br></div>";
+	    
+	  }
+	  else{
+	     echo "</div><hr><button type='button' ";
+	     echo "onClick=\"parent.location='studentartifact' \">Upload Artifacts</button>";
+	     echo "<button type='button' onClick=\"parent.location='standards' \">Manage Portfolio</button>
+	         <br><br>
+	         <hr><br>";
+	     echo "<div id='uploads'>
+	         <strong>Recent Uploads</strong>
+	         <br>
+	         <table id=\'uploaded_artifacts_table\'>
+	         <tr>
+	            <th>Artifact Title</th>
+	    	 <th>Course</th>
+	         </tr><dl>";
+	     echo $this->partialLoop('partials/uploadRow.phtml', $this->uploads);
+	     echo "</table></dl><br></div>";
+      
+	     echo "<div id='linked'>
+	         <strong>Recent Linked Artifacts</strong>
+	         <table id=\'linked_table\'>
+	         <tr>
+	    	  <th>Artifact Title</th>
+	    	  <th>Course</th>
+	    	  <th>Standard</th>
+	    	  <th>Indicator</th>
+	         </tr><dl>";
+	     echo $this->partialLoop('partials/linkedArtifactRow.phtml', $this->links);
+	     echo "</table></dl><br></div>";
+      
+	     echo "<div id='submissions'>
+	         <strong>Recent Submissions</strong>
+	         <br>
+	         <table id=\'submitted_table\'>
+	         <tr>
+	    	  <th>Artifact Title</th>
+	    	  <th>Course</th>
+	    	  <th>Standard</th>
+	    	  <th>Indicator</th>
+	    	  <th>Evaluator</th>
+	         </tr><dl>";
+	     echo $this->partialLoop('partials/submissionRow.phtml', $this->submit); 
+	     echo "</table></dl><br></div>";
+	     echo "<div id='feedback'>
+	         <strong>Recent Feedback</strong>
+	         <br>
+	         <table id=\'eval_table\'>
+	         <tr>
+	            <th>Artifact Title</th>
+	            <th>Course</th>
+	            <th>Standard</th>
+	            <th>Indicator</th>
+	            <th>Evaluator</th>
+	            <th>Artifact Rating</th>
+	         </tr><dl>";
+	     echo $this->partialLoop('partials/evaluatedRow.phtml', $this->evaluated);
+	     echo "</table></dl><br></div>";
+	  }
       }
 ?>	  
 

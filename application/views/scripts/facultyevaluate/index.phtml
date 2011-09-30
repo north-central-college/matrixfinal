@@ -1,40 +1,4 @@
 
-<script type="text/javascript">
-    function getRatings(param)
-    {echo("in here");
-        radiovalues = document.getElementsByName("artrating");
-        for(i=0; i<radiovalues.length; i++){
-            if (radiovalues[i].checked){
-                rv1 = radiovalues[i].value;
-            }
-        
-        }
-        radiovalues = document.getElementsByName("refrating");
-        for(i=0; i<radiovalues.length; i++){
-            if (radiovalues[i].checked){
-                rv2 = radiovalues[i].value;
-            }
-        
-        }
-        param = param + "&ar=" + rv1 + "&rr=" + rv2;
-        
-        //window.location = "http://localhost/mpfinal/public/facultyevaluate/process?" + param;
-        // show_confirm loses form data
-        // make sure - if yes, go to process method of facultyevaluate controller
-        // sending along needed data to update table, if not stay on same page
-        result = javascript:show_confirm("facultyevaluate/process?" + param,
-                                "facultyevaluate?" + param,
-                                "Rating this Artifact");
-        if (result){
-           return param;
-        }
-        else{
-            return false;
-        }
-
-    }
-</script>
-
 <h2>Select Ratings</h2>
 
 <?= $this->form;?>

@@ -77,14 +77,27 @@ class App_StudentService {
     // C StClair
     // Used in: ArtifactlinkController
     public function GetAllArtifactsNotLinkedtoIndicator($id, $standard, $indicator)
-    {
-   		$select = $this->db->select()
+    {		
+	
+		$notinSelect = $this->db->select()
+				->from(array('ais' => 'artifact_indicator_status'), array('artifact_id', 'indicator_id'))
+				->where('ais.indicator_id = ?', $indicator);
+		
+   	/*	$select = $this->db->select()
    			->from(array('a' => 'artifact'), array('artifact_id', 'artifact_title', 'description', 'timestamp'))
 			->join(array('u'=>'user'), 'a.student_id = u.user_id')
-   			->where('a.artifact_id NOT IN (?)',
-				$this->db->fetchCol($this->db->select()
-				    ->from(array('ais' => 'artifact_indicator_status'), array('artifact_id', 'indicator_id'))
-				    ->where('ais.indicator_id = ?', $indicator)))
+   			->where('a.artifact_id NOT IN (?)', $this->db->fetchCol($notinSelect))
+   			->where('u.user_id = ?', $id);
+	*/
+		$select = $this->db->select()
+   			->from(array('a' => 'artifact'), array('artifact_id', 'artifact_title',
+							       'description as artifact_description', 'timestamp'))
+			->join(array('u'=>'user'), 'a.student_id = u.user_id')
+			//->joinLeft(array('ais' => 'artifact_indicator_status'),
+			//	   'ais.artifact_id = a.artifact_id',
+			//	   array('artifact_id as aisartifact_id'))
+			//->where('ais.indicator_id = ?', $indicator)
+			//->where('ais.artifact_id is NULL')
    			->where('u.user_id = ?', $id);
 			
    		return $this->db->fetchAll($select);
@@ -106,9 +119,9 @@ class App_StudentService {
    			->from(array('ais' => 'artifact_indicator_status'), array('artifact_id', 'indicator_id', 'status_code', 'ais.timestamp as link_timestamp'))
    			->from(array('ar' => 'artifact_rating'), array('artifact_rating_id', 'artifact_id', 'indicator_id', 'rating_user_id', 'rating_code', 'ar.timestamp as eval_timestamp'))
    			->join(array('u'=>'user'), 'a.student_id = u.user_id &&
-   										ais.artifact_id = a.artifact_id &&
-   										ar.artifact_id = ais.artifact_id &&
-   										ar.indicator_id = ais.indicator_id')
+   					ais.artifact_id = a.artifact_id &&
+   					ar.artifact_id = ais.artifact_id &&
+   					ar.indicator_id = ais.indicator_id')
    			->where('u.user_id = ?', $id)
    			->where('a.artifact_id = ?', $aid);
    		return $this->db->fetchAll($select);
@@ -124,11 +137,15 @@ class App_StudentService {
 	{
    		$selectAIS = $this->artifact_indicator_status->select()
    			->from(array('ais' => 'artifact_indicator_status'),array('ais.artifact_id'));
-   		$select = $this->artifact->select()->where('student_id = ?', $student_id)
+
+   		$select = $this->db->select()
+			->from(array('a' => 'artifact'))
+			->joinLeft(array('c'=>'course'), 'a.course_id = c.course_id')
+			->where('student_id = ?', $student_id)
    			->where('artifact_id NOT IN (?)', $selectAIS)
    			->order('artifact_id DESC')
    			->limit(5);
-   		return $this->artifact->fetchAll($select);
+   		return $this->db->fetchAll($select);
 	}
    
      //Database function to retrieve the linked artifacts for the user with the given id number
@@ -143,8 +160,10 @@ class App_StudentService {
    			->from(array('a' => 'artifact'), array('artifact_id', 'artifact_title'))
    			->join(array('ais'=>'artifact_indicator_status'), 'a.artifact_id = ais.artifact_id')
    			->join(array('c'=>'course'), 'a.course_id = c.course_id')
-   			->join(array('i'=> 'indicator'), 'i.indicator_id = ais.indicator_id')
-   			->join(array('s'=> 'standard'), 'i.standard_id = s.standard_id')
+   			->join(array('i'=> 'indicator'), 'i.indicator_id = ais.indicator_id',
+			       array('description as indicator_description', '*'))
+   			->join(array('s'=> 'standard'), 'i.standard_id = s.standard_id',
+			       array('description as standard_description', '*'))
    			->where('ais.status_code = ?', '1')
    			->where('a.student_id = ?', $student_id)
    			->order('artifact_indicator_status_id DESC')
@@ -166,8 +185,10 @@ class App_StudentService {
    			->from(array('a' => 'artifact'), array('artifact_id', 'artifact_title'))
    			->join(array('ais'=>'artifact_indicator_status'), 'a.artifact_id = ais.artifact_id')
    			->join(array('c'=>'course'), 'a.course_id = c.course_id')
-   			->join(array('i'=> 'indicator'), 'i.indicator_id = ais.indicator_id')
-   			->join(array('s'=> 'standard'), 'i.standard_id = s.standard_id')
+   			->join(array('i'=> 'indicator'), 'i.indicator_id = ais.indicator_id',
+			          array('description as indicator_description', '*'))
+   			->join(array('s'=> 'standard'), 'i.standard_id = s.standard_id',
+			       array('description as standard_description', '*'))
    			->join(array('ar'=>'artifact_rating'), 'ar.artifact_id = ais.artifact_id')
    			->join(array('u'=>'user'), 'ar.rating_user_id = u.user_id')
    			->where('ais.status_code = ?', '2')
@@ -190,8 +211,10 @@ class App_StudentService {
    			->from(array('a' => 'artifact'), array('artifact_id', 'artifact_title'))
    			->join(array('ais'=>'artifact_indicator_status'), 'a.artifact_id = ais.artifact_id')
    			->join(array('c'=>'course'), 'a.course_id = c.course_id')
-   			->join(array('i'=> 'indicator'), 'i.indicator_id = ais.indicator_id')
-   			->join(array('s'=> 'standard'), 'i.standard_id = s.standard_id')
+   			->join(array('i'=> 'indicator'), 'i.indicator_id = ais.indicator_id',
+			        array('description as indicator_description', '*'))
+   			->join(array('s'=> 'standard'), 'i.standard_id = s.standard_id',
+				array('description as standard_description', '*'))
    			->join(array('ar'=>'artifact_rating'), 'ar.artifact_id = ais.artifact_id')
    			->join(array('u'=>'user'), 'ar.rating_user_id = u.user_id')
    			->join(array('r' => 'rating'), 'ar.rating_code = r.rating_code')
@@ -259,14 +282,16 @@ class App_StudentService {
 		$select = $this->db->select()
    			->from(array('i' => 'indicator'), array('i.indicator_id', 'i.description', 'i.indicator_number'))
 			->join(array('ais'=>'artifact_indicator_status'), 'i.indicator_id = ais.indicator_id', array('ais.artifact_indicator_status_id'))
-			->join(array('a' => 'artifact'), 'ais.artifact_id = a.artifact_id', array('a.artifact_id', 'artifact_description'=>'a.description', 'a.course_id', 'a.artifact_title'))
+			->join(array('a' => 'artifact'), 'ais.artifact_id = a.artifact_id',
+			       array('a.artifact_id', 'artifact_description'=>'a.description', 'a.course_id', 'a.artifact_title'))
    			->joinLeft(array('ar'=>'artifact_rating'), 'ar.artifact_id = a.artifact_id && ar.indicator_id = ais.indicator_id',
-							array('ar.artifact_rating_id', 'ar.rating_user_id', 'art_rating'=>'ar.rating_code', 'art_comment'=>'ar.comments'))
+							array('ar.artifact_rating_id', 'ar.rating_user_id', 'ar.rating_code as art_rating', 'art_comment'=>'ar.comments'))
    			->joinLeft(array('r'=>'reflective_statement'), 'r.artifact_id = a.artifact_id && r.indicator_id = ais.indicator_id',
 							array('r.reflective_statement_id', 'r.filename', 'r.comments'))
    			->joinLeft(array('rr'=>'reflective_statement_rating'), 'rr.reflective_statement_id = r.reflective_statement_id',
 							array('ref_rating'=>'rr.rating_code', 'ref_comment'=>'rr.comment'))
    			->joinLeft(array('u'=>'user'), 'ar.rating_user_id = u.user_id', array('rating_user_first'=>'u.first_name', 'rating_user_last'=>'u.last_name'))
+   			->join(array('c'=>'course'), 'a.course_id = c.course_id')
    			->where('i.standard_id = ?', $standard_id)
 		        ->where('a.student_id = ?', $student_id)
 		;

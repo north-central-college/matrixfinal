@@ -1,3 +1,19 @@
+<script type="text/javascript">
+function show_confirm(good, bad, msg)
+	{
+	   var r=confirm("Are you sure?\n" + msg);
+	   if (r==true)
+	   {
+		//return true;
+		window.location = "http://localhost/mpfinal/public/" + good;
+           }
+	   else
+	   {    //return false;
+		window.location = "http://localhost/mpfinal/public/" + bad;
+           }
+	}
+</script>
+
 <?php
 class IndicatorsController extends Zend_Controller_Action
 {
@@ -29,23 +45,7 @@ class IndicatorsController extends Zend_Controller_Action
     	
     }
     
-    public function processAction()
-    {  // function called after faculty chosen for submit for approval process 
-	$this->facultyService = new App_FacultyService();
-	$this->view->standard_id = $this->_getParam('standard');
-	$this->view->standard_num = $this->_getParam('standardnum');
-	$this->view->artifact_id = $this->_getParam('artifact');
-	$this->view->indicator_id = $this->_getParam('indicator');
-	$this->view->facultyRowSet = $this->facultyService->GetFacultyByName(
-					$this->_getParam('faculty'));
-	
-    	$this->view->faculty_id = $this->view->facultyRowSet[0]['user_id'];
-	$this->facultyService->NewArtifactRating($this->view->artifact_id,
-						 $this->view->indicator_id,
-						 $this->view->faculty_id);
-	$this->_redirect('/indicators?standard=' . $this->view->standard_id)
-	           . '&standardnum=' . $this->view->standard_num;
-    }
+    
     public function removeAction()
     {   // remove artifact link action
 	$this->studentService = new App_StudentService();

@@ -1,7 +1,7 @@
 <tr>
 	<td><?= $this->student_last_name ?>, <?= $this->student_first_name ?></td>
 	<td><?= $this->standard_number ?> </td>
-	<td><?= $this->indicator_number . ": " . $this->indicator_description ?> </td>
+	<td><?= $this->indicator_number ?> </td>
 	<td><a href="landing/openartifact?artifact=<?= $this->artifact_id?>">
 		<?= $this->artifact_title?> </a></td>
 	<td><a href="landing/openreflective?reflective=<?= $this->reflective_statement_id?>">
@@ -10,6 +10,6 @@
 	<td><?= $this->submitted_timestamp ?> </td>
 	
 	<td><button type='button'
-	    onClick="parent.location='facultyevaluate/index?aisid=<?= $this->ais_id ?>&rssid=<?= $this->reflective_ss_id; ?>&arid=<?= $this->artifact_rating_id; ?>&rrid=<?= $this->reflective_statement_rating_id; ?>' ">Evaluate</button></td>
+	    onClick="parent.location='facultyevaluate/index?aisid=<?= $this->ais_id ?>&rssid=<?= $this->reflective_statement_id; ?>&arid=<?= $this->artifact_rating_id; ?>&rrid=<?= $this->reflective_statement_rating_id; ?>' ">Evaluate</button></td>
 </tr>
 

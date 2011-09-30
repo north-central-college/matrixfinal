@@ -181,7 +181,8 @@ class App_FacultyService {
    			$artifactRating, $artifactComment,
 			$reflectiveRating, $reflectiveComment, $aisid, $rssid)
    	{	
-   		//Update the artifact's rating   		
+  
+		//Update the artifact's rating   		
    		$params = array('rating_code' => $artifactRating,
 				'comments' => $artifactComment);
    		$where = "artifact_rating_id = " . $artifactRatingid;
@@ -245,7 +246,7 @@ class App_FacultyService {
    //		return $roleArray['role'];		
 	//}
 	
-	/*
+	// Used in: SubmitartifactController
 	public function GetAllFaculty(){
 		$select = $this->db->select()
 			       ->from('user', array(
@@ -255,18 +256,26 @@ class App_FacultyService {
 		$result = $this->db->fetchAll($select);
 		return $result;
 	}
-	*/
+	
 	// C StClair
 	// Used in: IndicatorsController
 	public function NewArtifactRating($artifact_id, $indicator_id, $rating_user_id)
 	{
+		// add a new artifact rating
    		$params = array(
    				'artifact_id' => $artifact_id,
 				'indicator_id' => $indicator_id,
    				'rating_user_id' => $rating_user_id,
    			);
-   		   					
    		$this->artifact_rating->insert($params);
+		
+		// update artifact indicator status to reflect submitted
+		$params = array('status_code' => 2);
+		$where = "artifact_id = " . $artifact_id . " && indicator_id = " . $indicator_id;
+		$this->db->update('artifact_indicator_status', $params, $where);   	 	
+  	 	
+		// add a new reflective rating
+		
 	}
 	// C StClair
 	// Used in: IndicatorsController

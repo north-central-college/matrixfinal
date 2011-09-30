@@ -19,6 +19,8 @@ class ArtifactlinkController extends Zend_Controller_Action
 	
     public function init()
     {
+	$this->view->pagetitle = "Link Artifact";
+				
         /* Initialize action controller here */
     	
     }

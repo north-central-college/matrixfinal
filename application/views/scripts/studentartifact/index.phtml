@@ -21,28 +21,9 @@
     //     $('[name=submit]').attr('disabled', 'disabled'); 
     //}
     
-    // This function is currently NOT used
-    // Instead, page redirected via setAction method in form 
-    function getData()
-    {   cv="";
-        coursevalues = document.getElementsByName("course");
-        for(i=0; i<coursevalues.length; i++){
-            if (coursevalues[i].selectedIndex){
-                cv = coursevalues[i].value;
-            }
-        }
-        //param = "artifact=" + document.getElementsByName("title");
-        //param = param + "&desc=" + document.getElementsByName("description");
-        //param = param + "&course=" + cv;
-        param = "course=" + cv;
-        // if yes, go to process method of studentartifact controller
-        // sending along course information, if no, stay on same page
-        javascript:show_confirm("studentartifact/process?" + param,
-                                "studentartifact",
-                                "Uploading Artifact from course " + cv);
-    }
+    
 </script>
-<h2>Insert New Artifact</h2>
+<h2>Upload New Artifact</h2>
 
 <?php 
    echo $this->form;

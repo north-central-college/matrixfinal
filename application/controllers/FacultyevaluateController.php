@@ -46,9 +46,6 @@ class FacultyevaluateController extends Zend_Controller_Action
     }
     public function processAction()
     {  // function called after rating chosen - need to update rating info
-	// ******* FIX *************
-	// This function grabs too much data from url
-	// but loses form data - need to find a fix for this
 	
 	$this->facultyService = new App_FacultyService();
 	

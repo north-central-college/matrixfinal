@@ -39,14 +39,12 @@ class StudentartifactController extends Zend_Controller_Action
       }
       
       public function processAction(){
-	 		// Get all courses to display on form		  	
+ 		// Get all courses to display on form
 	        $this->view->courses = $this->getCourses();
 		
 		// Retrieve the form and assign it to the view
 		
-		// ****** DON'T NEED BOTH - FIX
-		
-		$this->view->form = $this->getForm();
+		//$this->view->form = $this->getForm();
     		$form = $this->getForm();
 		// Get student service for queries
 		$this->studentService = new App_StudentService();

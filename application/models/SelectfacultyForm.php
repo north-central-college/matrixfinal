@@ -5,9 +5,13 @@ class Application_Model_SelectfacultyForm extends Zend_Form
         parent::__construct();
     	$this->setName("selectfaculty");
 	$this->setMethod('post');
-	// getFaculty method appears in submitartifact/index.phtml 
-    	$param = 'javascript:getFaculty("' . $param . '")';
-        $this->setAction($param);
+	
+	$jsparam = 'javascript:confirm("Are you sure?")';
+        $action = 'submitartifact/process?' . $param;
+	 
+        $this->setAction($action);
+	$this->addAttribs(array('onSubmit'=>$jsparam));
+	
 	$faculty = new Zend_Form_Element_Radio('faculty');
 	$faculty->setRequired(true);
 	$faculty->setLabel('Faculty: ')
