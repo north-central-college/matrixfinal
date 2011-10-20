@@ -4,12 +4,12 @@
 	<td><?= $this->indicator_number ?> </td>
 	<td><a href="landing/openartifact?artifact=<?= $this->artifact_id?>">
 		<?= $this->artifact_title?> </a></td>
-	<td><a href="landing/openreflective?reflective=<?= $this->reflective_statement_id?>">
-		<?= $this->reflective_statement_title?> </a></td>
+	<td><a href="landing/opencover?cover=<?= $this->cover_id?>">
+		<?= $this->cover_title?> </a></td>
 	<td><?= $this->course_number ?> </td>
 	<td><?= $this->submitted_timestamp ?> </td>
 	
 	<td><button type='button'
-	    onClick="parent.location='facultyevaluate/index?aisid=<?= $this->ais_id ?>&rssid=<?= $this->reflective_statement_id; ?>&arid=<?= $this->artifact_rating_id; ?>&rrid=<?= $this->reflective_statement_rating_id; ?>' ">Evaluate</button></td>
+	    onClick="parent.location='facultyevaluate/index?aid=<?= $this->artifact_id ?>&csid=<?= $this->cover_id; ?>&airid=<?= $this->artifact_indicator_rating_id; ?>&csrid=<?= $this->cover_rating_id; ?>' ">Evaluate</button></td>
 </tr>
 

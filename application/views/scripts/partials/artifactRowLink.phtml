@@ -1,7 +1,9 @@
 <tr>
 <td><?= $this->artifact_title?></td>
 <td><?= $this->artifact_description ?></td>
+<td><?= $this->cover_title?></td>
+<td><?= $this->cover_description ?></td>
 <td><button type='button'
-    onClick="parent.location='indicators/link?standard=<?= $this->standard_id;?>&standardnum=<?= $this->standard_num; ?>&artifact=<?= $this->artifact_id; ?>&indicator=<?= $this->indicator_id; ?>' ">Link Artifact</button></td>
+    onClick="parent.location='indicators/link?standard=<?= $this->standard_id;?>&standardnum=<?= $this->standard_num; ?>&artifact=<?= $this->artifact_id; ?>&indicator=<?= $this->indicator_id; ?>&cover=<?= $this->cover_id; ?>' ">Link Artifact</button></td>
 </tr>
 

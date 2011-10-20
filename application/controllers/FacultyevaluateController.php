@@ -28,15 +28,15 @@ class FacultyevaluateController extends Zend_Controller_Action
 	$this->view->ratinginfo = $this->getRatings();
 	
 	// retrieve ids to pass to form - will need to process
-    	$this->view->artifact_rating_id = $this->_getParam('arid');
-	$this->view->reflective_statement_rating_id = $this->_getParam('rrid');
-	$this->view->ais_id = $this->_getParam('aisid');
-	$this->view->rss_id = $this->_getParam('rssid');
+    	$this->view->artifact_id = $this->_getParam('aid');
+	$this->view->artifact_indicator_rating_id = $this->_getParam('airid');
+	$this->view->cover_id = $this->_getParam('csid');
+	$this->view->cover_rating_id = $this->_getParam('csrid');
 	
-	$param = "arid=" . $this->view->artifact_rating_id .
-		"&rrid=" . $this->view->reflective_statement_rating_id .
-		"&aisid=" . $this->view->ais_id .
-		"&rssid=" . $this->view->rss_id;
+	$param = "aid=" . $this->view->artifact_id .
+		"&airid=" . $this->view->artifact_indicator_rating_id .
+		"&csid=" . $this->view->cover_id .
+		"&csrid=" . $this->view->cover_rating_id;
 	
     	$this->view->form = $this->getForm($param);
     }
@@ -50,16 +50,16 @@ class FacultyevaluateController extends Zend_Controller_Action
 	$this->facultyService = new App_FacultyService();
 	
 	// get passed params
-    	$artifact_rating_id = $this->_getParam('arid');
-	$reflective_statement_rating_id = $this->_getParam('rrid');
-	$ais_id = $this->_getParam('aisid');
-	$rss_id = $this->_getParam('rssid');
+    	$this->view->artifact_id = $this->_getParam('aid');
+	$this->view->artifact_indicator_rating_id = $this->_getParam('airid');
+	$this->view->cover_id = $this->_getParam('csid');
+	$this->view->cover_rating_id = $this->_getParam('csrid');
 	
-	// Retrieve the form and assign it to the view
-	$param = "arid=" . $artifact_rating_id .
-		"&rrid=" . $reflective_statement_rating_id .
-		"&aisid=" . $ais_id .
-		"&rssid=" . $rss_id;
+	$param = "aid=" . $this->view->artifact_id .
+		"&airid=" . $this->view->artifact_indicator_rating_id .
+		"&csid=" . $this->view->cover_id .
+		"&csrid=" . $this->view->cover_rating_id;
+	
 	$this->view->ratinginfo = $this->getRatings();
 	
 	$form = $this->getForm($this->view->ratinginfo, $param);
@@ -76,11 +76,10 @@ class FacultyevaluateController extends Zend_Controller_Action
 		$reflective_rating = $formData['refrating'];
 		$artifact_rating_comment = $formData['acomment'];
 		$reflective_rating_comment = $formData['rcomment'];
-		$this->facultyService->UpdateRatingForArtifactAndReflectiveStatement(
-		    $artifact_rating_id, $reflective_statement_rating_id,
+		$this->facultyService->UpdateRatingForArtifactAndCover(
 		    $artifact_rating, $artifact_rating_comment,
 		    $reflective_rating, $reflective_rating_comment,
-		    $ais_id, $rss_id);
+		    $this->view->artifact_indicator_rating_id);
 	    }
 	}
 	$this->_redirect('/landing');
@@ -96,7 +95,7 @@ class FacultyevaluateController extends Zend_Controller_Action
 	$ctr = 0;
 	foreach ($rowset as $row){
 	   $code = $row['rating_code'];
-	   $desc = $row['description'];
+	   $desc = $row['rating_description'];
 	   $ratingNames[$code] = $code . ": " . $desc;
 	   $ctr++;
 	}

@@ -2,18 +2,22 @@
 <tr>
 	<td><?= $this->artifact_title ?></td> 
 	<td><?= $this->course_number ?> </td>
-	<td><?= $this->art_rating  ?> </td>
-	<td><?= $this->filename ?> </td>
-	<td><?= $this->ref_rating ?> </td>
-	<td><?= $this->rating_user_first . " " . $this->rating_user_last ?> </td>
+	<td><?= $this->artifact_rating  ?> </td>
+	<td><?= $this->cover_title ?> </td>
+	<td><?= $this->cover_rating ?> </td>
+	<td><?= $this->artifact_evaluator_first . " " . $this->artifact_evaluator_last ?> </td>
+
 	<?php
 	   $params1 = 'standard=' . $this->standard_id;
 	   $params2 = '&indicator=' . $this->indicator_id .
-		      '&artifact=' . $this->artifact_id;
+	         '&artifact=' . $this->artifact_id .
+	         '&cover='. $this->cover_id .
+		 '&air=' . $this->artifact_indicator_rating_id .
+	         '&csr=' . $this->cover_rating_id;
 	   echo "<td><button type='button'";
 	   
 	   // disable link button if there already is a faculty assigned
-	   if ($this->rating_user_first){
+	   if ($this->artifact_evaluator_first){
 		echo disableButton();
 	   }
 	   
@@ -29,8 +33,9 @@
 	   // removing action triggers show_confirm function
 	   $pathstart = 'javascript:show_confirm(\'indicators/remove?';
 	   $path = $pathstart . $params1 . $params2;
+	   
 	   // disable remove button if there already is a faculty assigned
-	   if ($this->rating_user_first){
+	   if ($this->artifact_evaluator_first){
 		echo disableButton();
 	   }
 	   echo "onClick=";

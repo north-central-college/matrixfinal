@@ -13,13 +13,13 @@ class Application_Model_ArtifactinputForm extends Zend_Form
       $this->setAction($action);
       $this->addAttribs(array('onSubmit'=>$jsparam));
 	  
-      $title = new Zend_Form_Element_Text('title');
-      $title->setLabel('Artifact Title')
-               ->setRequired(true)
-               ->addValidator('NotEmpty');
+      $atitle = new Zend_Form_Element_Text('artifacttitle');
+      $atitle->setLabel('Artifact Title')
+            ->setRequired(true)
+            ->addValidator('NotEmpty');
    
-      $description = new Zend_Form_Element_Text('description');
-      $description->setLabel('Description')
+      $adescription = new Zend_Form_Element_Text('artifactdescription');
+      $adescription->setLabel('Description')
                   ->setRequired(true)
                   ->addValidator('NotEmpty');
 
@@ -30,16 +30,34 @@ class Application_Model_ArtifactinputForm extends Zend_Form
              ->addMultiOptions($coursedata)
              ->addValidator('NotEmpty');
 
-      $file = new Zend_Form_Element_File('file');
+      $ctitle = new Zend_Form_Element_Text('covertitle');
+      $ctitle->setLabel('Cover Sheet Title')
+            ->setRequired(true)
+            ->addValidator('NotEmpty');
+   
+      $cdescription = new Zend_Form_Element_Text('coverdescription');
+      $cdescription->setLabel('Cover Sheet Description')
+                  ->setRequired(true)
+                  ->addValidator('NotEmpty');
+
+      $afile = new Zend_Form_Element_File('artifactfile');
       
-      $file->setLabel('File')
+      $afile->setLabel('Artifact File')
+           ->setDestination(APPLICATION_PATH . '/uploads/s' . $studentid)
+           ->setRequired(true);
+      
+      $cfile = new Zend_Form_Element_File('coverfile');
+      
+      $cfile->setLabel('Cover Sheet File')
            ->setDestination(APPLICATION_PATH . '/uploads/s' . $studentid)
            ->setRequired(true);
            
       $submit = new Zend_Form_Element_Submit('submit');
       $submit->setLabel('Upload');
       
-      $this->addElements(array($title, $description, $course, $file, $submit));
+      $this->addElements(array($atitle, $adescription, $afile,
+                               $ctitle, $cdescription, $cfile,
+                               $course, $submit));
     }
 }
 

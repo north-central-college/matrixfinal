@@ -57,8 +57,10 @@ class StudentartifactController extends Zend_Controller_Action
 	             if ($form->isValid($formData)) {
 			    
 			// getting text data
-	                $artifact_title = $formData['title'];
-			$description = $formData['description'];
+	                $atitle = $formData['artifacttitle'];
+			$adescription = $formData['artifactdescription'];
+			$ctitle = $formData['covertitle'];
+			$cdescription = $formData['coverdescription'];
 			
 			// getting course chosen
 			$course_num = $formData['course'];
@@ -66,39 +68,65 @@ class StudentartifactController extends Zend_Controller_Action
 			// above stmt returns array
 			$course_id = $course_id['course_id'];
 			
-			// getting file data
-			$fullFilePath = $form->file->getFileName();
+			// getting artifact file data
+			$fullFilePath = $form->artifactfile->getFileName();
 			$path_title = strtok($fullFilePath, ".");
-			$media_extension = strtok("\n\t");
+			$amedia_extension = strtok("\n\t");
 			
 			// extract filename from full path removing all spaces
 			$filename = strrev($path_title);
-			$filename = strtok($filename, "\\");
+			$filename = strtok($filename, "\\/");
 			$filename = str_replace(" ", "", $filename);
-			$filename = strrev($filename);
+			$afilename = strrev($filename);
 			
-			// uploading file
-			$file = $form->getElement('file');
+			// uploading artifact file
+			$afile = $form->getElement('artifactfile');
 			try {
 			    // upload received file renaming to above
-			    $fullname = $filename . "." . $media_extension;
-			    $file->addFilter('Rename', $fullname);
-		            $file->receive();
+			    $fullname = $afilename . "." . $amedia_extension;
+			    $afile->addFilter('Rename', $fullname);
+		            $afile->receive();
 			} catch (Zend_File_Transfer_Exception $e) {
 			    $e->getMessage();
 			}
+			
+			// getting cover sheet file data
+			$fullFilePath = $form->coverfile->getFileName();
+			$path_title = strtok($fullFilePath, ".");
+			$cmedia_extension = strtok("\n\t");
+			
+			// extract filename from full path removing all spaces
+			$filename = strrev($path_title);
+			$filename = strtok($filename, "\\/");
+			$filename = str_replace(" ", "", $filename);
+			$cfilename = strrev($filename);
+			
+			// uploading cover file
+			$cfile = $form->getElement('coverfile');
+			try {
+			    // upload received file renaming to above
+			    $fullname = $cfilename . "." . $cmedia_extension;
+			    $cfile->addFilter('Rename', $fullname);
+		            $cfile->receive();
+			} catch (Zend_File_Transfer_Exception $e) {
+			    $e->getMessage();
+			}
+			
 			// getting user id
 			$userid = $this->view->userInfo['userID'];
 			
 			//Zend_Debug::dump($filename, '$filename');
-	         	Zend_Debug::dump($artifact_title, '$artifact_title');
-	                Zend_Debug::dump($description, '$description');
+	         	Zend_Debug::dump($atitle, '$artifact_title');
+	                Zend_Debug::dump($adescription, '$description');
+			Zend_Debug::dump($ctitle, '$cover_title');
+	                Zend_Debug::dump($cdescription, '$description');
 			Zend_Debug::dump($course_num, '$course_num');
 			Zend_Debug::dump($course_id, '$course_id');
 			Zend_Debug::dump($userid, '$userid');
 	                
-			$this->studentService->NewArtifact($artifact_title, $course_id,
-				    $description, $filename, $media_extension, $userid);
+			$this->studentService->NewArtifactAndCover(
+				$atitle, $adescription, $afilename, $amedia_extension, $course_id,
+				$ctitle, $cdescription, $cfilename, $cmedia_extension, $userid);
 	
 		    } else {
 	                $form->populate($formData);

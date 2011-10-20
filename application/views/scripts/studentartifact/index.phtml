@@ -1,29 +1,6 @@
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
-<script type="text/javascript">
-    // C StClair
-    // Code to enable/disable upload buttonFunction to disable and enable upload button depending on
-    // whether user has chosen a file to upload.  JQuery not working?
- /*
-    submitvalue = document.getElementsByName('submit');
-    submitvalue.disabled = true;
-    if (submitvalue){
-          alert(submitvalue);
-    }
-    else{
-          alert("false");
-    }
- */
-    //if (!$('[name=file]').val()){
-     //    $('[name=submit]').attr('disabled', true);
-    //}
-    //else{  // enable 
-    //     $('[name=submit]').attr('disabled', 'disabled'); 
-    //}
-    
-    
-</script>
-<h2>Upload New Artifact</h2>
+<h2>Upload New Artifact and Cover Sheet</h2>
 
 <?php 
    echo $this->form;
@@ -33,7 +10,8 @@
 <?php echo "<table id=\"student_artifact_table\" class =\"student_artifact_table\" cellspacing=\"0\">";?>
 <?php echo "<tr>";
       echo "<th>Artifact Title</th>";
-      echo "<th>Memo</th>";
+      echo "<th>Course</th>";
+      echo "<th>Description</th>";
       echo "</tr>";
 ?>
 <dl>

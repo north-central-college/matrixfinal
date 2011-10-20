@@ -28,11 +28,15 @@ class SubmitartifactController extends Zend_Controller_Action
     	$this->view->standard_id = $this->_getParam('standard');
 	$this->view->artifact_id = $this->_getParam('artifact');
 	$this->view->indicator_id = $this->_getParam('indicator');
-    	$this->view->facultyinfo = $this->getFaculty();
+    	$this->view->cover_id = $this->_getParam('cover');
+	$this->view->artifact_indicator_rating_id = $this->_getParam('air');
+	$this->view->facultyinfo = $this->getFaculty();
 	
 	$param = "standard=" . $this->view->standard_id .
 		"&indicator=" . $this->view->indicator_id .
-		"&artifact=" . $this->view->artifact_id;
+		"&artifact=" . $this->view->artifact_id .
+		"&air=" . $this->view->artifact_indicator_rating_id .
+		"&cover=" . $this->view->cover_id;
     	$this->view->form = $this->getForm($param);
     }
     
@@ -43,10 +47,16 @@ class SubmitartifactController extends Zend_Controller_Action
 	$this->view->standard_num = $this->_getParam('standardnum');
 	$this->view->artifact_id = $this->_getParam('artifact');
 	$this->view->indicator_id = $this->_getParam('indicator');
+	$this->view->artifact_indicator_rating_id = $this->_getParam('air');
+	$this->view->cover_id = $this->_getParam('cover');
 	
 	$param = "standard=" . $this->view->standard_id .
 		"&indicator=" . $this->view->indicator_id .
-		"&artifact=" . $this->view->artifact_id;
+		"&artifact=" . $this->view->artifact_id .
+		"&air=" . $this->view->artifact_indicator_rating_id .
+		"&cover=" . $this->view->cover_id;
+        
+		
 	$this->view->facultyinfo = $this->getFaculty();	
 	$form = $this->getForm($this->view->facultyinfo, $param);
     
@@ -62,9 +72,9 @@ class SubmitartifactController extends Zend_Controller_Action
 	        $this->view->facultyRowSet = $this->facultyService->GetFacultyByName(
 					$faculty);
 	    	$this->view->faculty_id = $this->view->facultyRowSet[0]['user_id'];
-		$this->facultyService->NewArtifactRating($this->view->artifact_id,
-						 $this->view->indicator_id,
-						 $this->view->faculty_id);
+		$this->facultyService->UpdateArtifactRating(
+			    $this->view->artifact_indicator_rating_id,
+			    $this->view->faculty_id);
 	    }
 	}
 	$this->_redirect('/indicators?standard=' . $this->view->standard_id)

@@ -31,7 +31,6 @@ class LandingController extends Zend_Controller_Action
 			$rowset = $this->facultyService->GetPendingArtifacts(
 				$this->view->userInfo['userID'],  'submitted_timestamp', 2);
 			$this->view->pending = $rowset->toArray();
-			
 			$rowset = $this->facultyService->GetReviewedArtifacts(
 			   	  $this->view->userInfo['userID'], 'submitted_timestamp', 3);
 			$this->view->reviewed = $rowset->toArray();
@@ -115,7 +114,7 @@ class LandingController extends Zend_Controller_Action
 		$this->studentService = new App_StudentService();
 		$result = $this->studentService->GetArtifact($this->view->artifact_id);
 		$file = "uploads/s" . $result->student_id . "/" .
-			$result->filename . "." . $result->media_extension;
+			$result->artifact_filename . "." . $result->artifact_media_extension;
 		
 		header('Content-Description: File Transfer');
 		header('Content-Type: application/octet-stream');
@@ -130,15 +129,15 @@ class LandingController extends Zend_Controller_Action
 		readfile($file);
 		exit;
       }
-      public function openreflectiveAction(){
+      public function opencoverAction(){
 		//This will open a file chosen by the user.
 		                  
-	 	$this->view->reflective_id = $this->_getParam('reflective');
+	 	$this->view->cover_id = $this->_getParam('cover');
 		// Get student service for queries
 		$this->studentService = new App_StudentService();
-		$result = $this->studentService->GetReflectiveStatement($this->view->reflective_id);
+		$result = $this->studentService->GetCoverSheet($this->view->cover_id);
 		$file = "uploads/s" . $result->student_id . "/" .
-			$result->filename . "." . $result->media_extension;
+			$result->cover_filename . "." . $result->cover_media_extension;
 		
 		header('Content-Description: File Transfer');
 		header('Content-Type: application/octet-stream');

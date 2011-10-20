@@ -42,7 +42,7 @@ class IndicatorsController extends Zend_Controller_Action
 	$this->view->indartRowSet = $this->studentService->GetAllIndicatorsArtifactsbyStandard(
     		$this->view->userInfo['userID'], $this->view->standard_id);
 	
-    	
+    	var_dump($this->view->indartRowSet);
     }
     
     
@@ -56,12 +56,12 @@ class IndicatorsController extends Zend_Controller_Action
 	$this->view->artifact_id = $this->_getParam('artifact');
 	$this->view->indicator_id = $this->_getParam('indicator');
 	$this->view->indicator_num = $this->_getParam('indicatornum');
+	$this->view->artifact_indicator_rating_id = $this->_getParam('air');
 	$this->view->facultyRowSet = $this->facultyService->GetFacultyByName(
 					$this->_getParam('faculty'));
 	
     	$this->view->faculty_id = $this->view->facultyRowSet[0]['user_id'];
-	$this->studentService->RemoveArtifactIndicatorLink($this->view->artifact_id,
-						 $this->view->indicator_id);
+	$this->studentService->RemoveArtifactIndicatorLink($this->view->artifact_indicator_rating_id);
 	$this->_redirect('/indicators?standard=' . $this->view->standard_id);
    }
     public function linkAction()
@@ -71,8 +71,9 @@ class IndicatorsController extends Zend_Controller_Action
 	$this->view->standard_num = $this->_getParam('standardnum');
 	$this->view->artifact_id = $this->_getParam('artifact');
 	$this->view->indicator_id = $this->_getParam('indicator');
-	$this->studentService->NewArtifactIndicatorStatus($this->view->artifact_id,
-						 $this->view->indicator_id);
+	$this->view->cover_id = $this->_getParam('cover');
+	$this->studentService->NewArtifactIndicator(
+		$this->view->artifact_id, $this->view->indicator_id, $this->view->cover_id);
 	$this->_redirect('/indicators?standard=' . $this->view->standard_id)
 	           . '&standardnum=' . $this->view->standard_num;
     }

@@ -4,10 +4,10 @@
 	<td><?= $this->indicator_number ?> </td>
 	<td><a href="landing/openartifact?artifact=<?= $this->artifact_id?>">
 		<?= $this->artifact_title?> </a></td>
-	<td><a href="landing/openreflective?reflective=<?= $this->reflective_statement_id?>">
-		<?= $this->reflective_statement_title?> </a></td>
+	<td><a href="landing/opencover?cover=<?= $this->cover_id?>">
+		<?= $this->cover_title?> </a></td>
 	<td><?= $this->course_number ?> </td>
 	<td><?= $this->submitted_timestamp ?> </td>
-	<td><?= $this->artifact_rating . ": " . $this->artifact_comment ?> </td>
-        <td><?= $this->reflective_rating . ": " . $this->reflective_comment ?> </td>
+	<td><?= $this->artifact_rating ?> </td>
+        <td><?= $this->cover_rating ?> </td>
 </tr>
