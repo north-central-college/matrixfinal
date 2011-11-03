@@ -8,8 +8,8 @@
 	<td><?= $this->standard_number ?> </td>
 	<td><?= $this->indicator_number ?> </td>
 	<td><?= $this->first_name;?> <?= $this->last_name;?> </td>
-
-	<td class="showTip rcodes"> <?= $this->artifact_rating ?> </td> 
-	<td><?= $this->cover_rating ?> </td>
+	
+	<?= '<td title="' . $this->artifact_comment . '">' . $this->artifact_rating_description . '</td>' ?>
+	<?= '<td title="' . $this->cover_comment . '">' . $this->cover_rating_description . '</td>' ?>
 	
 </tr>

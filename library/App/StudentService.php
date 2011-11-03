@@ -19,6 +19,7 @@ class App_StudentService {
    		$this->cover_sheet = new App_CoverSheetTable();
 		$this->cover_sheet_rating = new App_CoverSheetRatingTable();
    		$this->role = new App_RoleTable();
+		$this->rating = new App_RatingTable();
    		$this->standard = new App_StandardTable();
    		$this->indicator = new App_IndicatorTable();
    		$this->course = new App_CourseTable();
@@ -186,6 +187,12 @@ class App_StudentService {
    			->join(array('air'=>'artifact_indicator_rating'), 'a.artifact_id = air.artifact_id')
 			->join(array('csr' =>'cover_sheet_rating'),
 				     'air.artifact_indicator_rating_id = csr.artifact_indicator_rating_id')
+			->join(array('r1' => 'rating'),
+			       'air.artifact_rating = r1.rating_code',
+			       array('r1.rating_long_description_artifact', 'r1.rating_description as artifact_rating_description'))
+   			->join(array('r2' => 'rating'),
+			       'csr.cover_rating = r2.rating_code',
+			       array('r2.rating_long_description_cover', 'r2.rating_description as cover_rating_description'))
    			->join(array('c'=>'course'), 'a.course_id = c.course_id')
    			->join(array('i'=> 'indicator'), 'i.indicator_id = air.indicator_id')
    			->join(array('s'=> 'standard'), 'i.standard_id = s.standard_id')
